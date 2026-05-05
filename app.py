@@ -83,7 +83,7 @@ def process_purchase(tool_name, price):
         st.error("Số dư Credit không đủ!")
 
 # ==========================================
-# 3. SIDEBAR (THÔNG TIN NGƯỜI DÙNG)
+# 3. SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("## 🚀 ED-ODYSSEY")
@@ -127,7 +127,7 @@ if menu == "🛒 Blueprint Marketplace":
     with col1:
         st.markdown("""
             <div class="cyber-card">
-                <!-- Ảnh Vũ trụ/Vật lý trừu tượng, tone Dark Blue -->
+                <!-- VỊ TRÍ SỐ 1: CHỖ ĐỂ ÔNG DÁN LINK ẢNH CỦA ÔNG -->
                 <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
@@ -143,7 +143,7 @@ if menu == "🛒 Blueprint Marketplace":
     with col2:
         st.markdown("""
             <div class="cyber-card">
-                <!-- Ảnh Dashboard dữ liệu, tone Dark/Neon -->
+                <!-- Ảnh Đồ thị tone Dark Neon -->
                 <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Đồ Thị Động Học</div>
@@ -159,7 +159,7 @@ if menu == "🛒 Blueprint Marketplace":
     with col3:
         st.markdown("""
             <div class="cyber-card">
-                <!-- Ảnh Ma trận công nghệ, tone Cyan/Green Neon -->
+                <!-- Ảnh Ma trận/Thuật toán -->
                 <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
