@@ -221,24 +221,29 @@ elif menu == "💻 My Workspace":
     st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Bàn làm việc kỹ thuật số. Chọn tab bên dưới để khởi chạy công cụ.</div>', unsafe_allow_html=True)
     
+    # Kiểm tra xem người dùng đã mua món đồ nào chưa
     if not st.session_state.owned_tools:
         st.info("Workspace trống. Hãy nạp Credit và ghé Marketplace để trang bị công cụ.")
     else:
+        # Tự động tạo các Tab dựa trên danh sách đồ đã mua
         tabs = st.tabs(st.session_state.owned_tools)
         
         for i, tool in enumerate(st.session_state.owned_tools):
             with tabs[i]:
-                st.write("")
+                st.write("") # Tạo khoảng cách nhỏ
+                
                 if tool == "Mô Phỏng Vật Lý 10":
-                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=750, scrolling=True)
+                    # Link này ông đã có sẵn
+                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=800, scrolling=True)
+                
                 elif tool == "Đồ Thị Động Học":
-                    st.success("Hệ thống phân tích Pandas/NumPy đã sẵn sàng.")
-                    st.file_uploader("Tải tệp dữ liệu thí nghiệm (.csv)", type=['csv'])
+                    # THAY LINK WEB ĐỒ THỊ CỦA ÔNG VÀO ĐÂY
+                    # Lưu ý: Phải có đuôi /?embed=true để thanh menu của trang con bị ẩn đi
+                    components.iframe("https://link-trang-do-thi-cua-ong.streamlit.app/?embed=true", height=800, scrolling=True)
+                    
                 elif tool == "Xử Lý Tích Vô Hướng":
-                    c_left, c_right = st.columns(2)
-                    c_left.text_input("Tọa độ Vector U:")
-                    c_right.text_input("Tọa độ Vector V:")
-                    st.button("Tính toán", type="primary")
+                    # THAY LINK WEB VECTOR CỦA ÔNG VÀO ĐÂY
+                    components.iframe("https://link-trang-vector-cua-ong.streamlit.app/?embed=true", height=800, scrolling=True)
 
 elif menu == "🎯 Bounty Board":
     st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
