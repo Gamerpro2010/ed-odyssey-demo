@@ -1,6 +1,5 @@
 import streamlit as st
-import numpy as np
-import plotly.graph_objects as go
+import streamlit.components.v1 as components
 
 # ==========================================
 # 1. CẤU HÌNH TRANG - PHONG CÁCH TỐI GIẢN
@@ -11,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS nhỏ để chỉnh lại font và khoảng cách cho thanh lịch
+# Custom CSS
 st.markdown("""
     <style>
     .st-emotion-cache-16txtl3 { padding-top: 2rem; }
@@ -23,7 +22,7 @@ st.markdown("""
 # 2. KHỞI TẠO HỆ THỐNG DỮ LIỆU
 # ==========================================
 if 'credit_balance' not in st.session_state:
-    st.session_state.credit_balance = 50000  # Đơn vị là Credit
+    st.session_state.credit_balance = 50000 
 if 'owned_tools' not in st.session_state:
     st.session_state.owned_tools = []
 
@@ -38,25 +37,25 @@ def buy_tool(tool_name, price):
         st.error("Số dư Credit không đủ. Vui lòng nạp thêm!")
 
 # ==========================================
-# 3. THANH ĐIỀU HƯỚNG (SIDEBAR) CHUYÊN NGHIỆP
+# 3. THANH ĐIỀU HƯỚNG (SIDEBAR)
 # ==========================================
 with st.sidebar:
     st.title("⚡ ED-ODYSSEY")
     
-    # Profile gọn gàng
     st.markdown("**👦 Explorer_GenZ**")
     st.caption("Hạng: Thợ săn bạc")
     st.write("---")
     
-    # Khu vực Ví Credit (Đã sửa theo đúng logic của ông)
     with st.container(border=True):
         st.metric(label="Số dư Credit", value=f"{st.session_state.credit_balance:,.0f} CR")
         
-        # Nút nạp tiền bằng MoMo được đặt đúng chỗ
         with st.popover("💳 Nạp thêm Credit"):
             st.markdown("Chọn phương thức thanh toán:")
             method = st.selectbox("Cổng thanh toán", ["Ví MoMo", "ZaloPay", "Chuyển khoản Ngân hàng"], label_visibility="collapsed")
-            st.button(f"Xác nhận nạp qua {method}", use_container_width=True, type="primary")
+            if st.button(f"Xác nhận nạp qua {method}", use_container_width=True, type="primary"):
+                st.session_state.credit_balance += 20000
+                st.toast("Đã nạp thành công 20,000 CR!", icon="💰")
+                st.rerun()
     
     st.write("---")
     st.markdown("**ĐIỀU HƯỚNG:**")
@@ -73,18 +72,17 @@ with st.sidebar:
 if menu == "🛒 Blueprint Marketplace":
     st.header("🛒 Blueprint Marketplace")
     st.write("Khám phá và trang bị các công cụ học tập thực chiến.")
-    st.write("") # Tạo khoảng trống
+    st.write("")
     
     col1, col2, col3 = st.columns(3)
     
-    # Thiết kế Thẻ sản phẩm (Card) thân thiện
     with col1.container(border=True):
-        st.markdown("### 🚀 Ném Xiên 360°")
-        st.markdown('<p class="creator-text">Cung cấp bởi: Hustler_Physics99</p>', unsafe_allow_html=True)
-        st.write("Mô phỏng quỹ đạo ném xiên thời gian thực. Phân tích vector vận tốc và tầm xa.")
+        st.markdown("### 🚀 Mô Phỏng Vật Lý 10")
+        st.markdown('<p class="creator-text">Cung cấp bởi: Nam Sơn</p>', unsafe_allow_html=True)
+        st.write("Trình mô phỏng tương tác chuyên sâu cho chương trình Vật Lý lớp 10.")
         st.markdown("**Giá: 15,000 CR**")
         if st.button("Mua bằng Credit", key="btn1", use_container_width=True, type="primary"):
-            buy_tool("Ném Xiên 360°", 15000)
+            buy_tool("Mô Phỏng Vật Lý 10", 15000)
 
     with col2.container(border=True):
         st.markdown("### 📈 Đồ Thị Động Học")
@@ -110,26 +108,13 @@ elif menu == "💻 My Workspace":
     if not st.session_state.owned_tools:
         st.info("Bàn làm việc của bạn đang trống. Hãy vào Marketplace để trang bị thêm công cụ nhé!")
     else:
-        # Nếu đã mua Ném xiên, hiển thị công cụ thật
-        if "Ném Xiên 360°" in st.session_state.owned_tools:
-            with st.expander("🚀 Khởi chạy: Ném Xiên 360°", expanded=True):
-                st.write("Nhập thông số để mô phỏng quỹ đạo:")
-                c1, c2 = st.columns(2)
-                v0 = c1.slider("Vận tốc ban đầu (m/s)", 10, 80, 40)
-                angle = c2.slider("Góc ném (độ)", 10, 80, 45)
-                
-                # Biểu diễn đồ thị
-                g = 9.8
-                theta = np.radians(angle)
-                t_flight = (2 * v0 * np.sin(theta)) / g
-                t = np.linspace(0, t_flight, 100)
-                x = v0 * np.cos(theta) * t
-                y = v0 * np.sin(theta) * t - 0.5 * g * t**2
-                
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(width=3, color='#3b82f6')))
-                fig.update_layout(title="Mô phỏng Quỹ đạo", xaxis_title="Tầm xa (m)", yaxis_title="Độ cao (m)", margin=dict(l=0, r=0, t=40, b=0))
-                st.plotly_chart(fig, use_container_width=True)
+        # TÍCH HỢP TRANG WEB VẬT LÝ VÀO ĐÂY
+        if "Mô Phỏng Vật Lý 10" in st.session_state.owned_tools:
+            with st.expander("🚀 Đang chạy: Mô Phỏng Vật Lý 10", expanded=True):
+                st.success("Đã kết nối thành công tới máy chủ Vật Lý 10. Chúc bạn trải nghiệm tốt!")
+                # Link đã được dọn dẹp các mã theo dõi của Facebook (fbclid) và thêm hậu tố nhúng
+                clean_url = "https://mo-phong-vat-ly-10.streamlit.app/?embed=true"
+                components.iframe(clean_url, height=750, scrolling=True)
                 
         if "Đồ Thị Động Học" in st.session_state.owned_tools:
             with st.expander("📈 Khởi chạy: Đồ Thị Động Học"):
