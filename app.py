@@ -221,24 +221,31 @@ elif menu == "💻 My Workspace":
     st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Bàn làm việc kỹ thuật số. Chọn tab bên dưới để khởi chạy công cụ.</div>', unsafe_allow_html=True)
     
+    # Kiểm tra xem ông đã mua món nào ở Marketplace chưa
     if not st.session_state.owned_tools:
-        st.info("Workspace trống. Hãy nạp Credit và ghé Marketplace để trang bị công cụ.")
+        st.info("Bàn làm việc của ông đang trống. Hãy ghé Marketplace để trang bị thêm công cụ!")
     else:
+        # Tự động tạo Tab dựa trên danh sách đồ đã sở hữu
         tabs = st.tabs(st.session_state.owned_tools)
         
         for i, tool in enumerate(st.session_state.owned_tools):
             with tabs[i]:
-                st.write("")
+                st.write("") 
+                
+                # Khối điều hướng nhúng trang web con
                 if tool == "Mô Phỏng Vật Lý 10":
-                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=750, scrolling=True)
+                    # Link app vật lý của ông
+                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=850, scrolling=True)
+                
                 elif tool == "Đồ Thị Động Học":
-                    st.success("Hệ thống phân tích Pandas/NumPy đã sẵn sàng.")
-                    st.file_uploader("Tải tệp dữ liệu thí nghiệm (.csv)", type=['csv'])
+                    # THAY LINK WEB ĐỒ THỊ CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
+                    # Ví dụ: https://sonhns-kinematics.streamlit.app/?embed=true
+                    components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?fbclid=IwY2xjawRm6TFleHRuA2FlbQIxMABicmlkETFrYUxpSnpFNkdJcmxFc0k0c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgC7DOGZqlInvnydpTI-3EdJ6GTidXq2CaRKkNrwhIzpdseJHp1iBb539Sa2_aem_tHbZwSnB1xeX4PkliE2ROQ/?embed=true", height=850, scrolling=True)
+                
                 elif tool == "Xử Lý Tích Vô Hướng":
-                    c_left, c_right = st.columns(2)
-                    c_left.text_input("Tọa độ Vector U:")
-                    c_right.text_input("Tọa độ Vector V:")
-                    st.button("Tính toán", type="primary")
+                    # THAY LINK WEB VECTOR CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
+                    # Ví dụ: https://sonhns-vector-engine.streamlit.app/?embed=true
+                    components.iframe("https://ed-odyssey-demo-nybq8qraapra5jutfymrdv.streamlit.app/?embed=true", height=850, scrolling=True)
 
 elif menu == "🎯 Bounty Board":
     st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
