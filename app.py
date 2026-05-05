@@ -128,7 +128,7 @@ if menu == "🛒 Blueprint Marketplace":
         st.markdown("""
             <div class="cyber-card">
                 <!-- VỊ TRÍ SỐ 1: CHỖ ĐỂ ÔNG DÁN LINK ẢNH CỦA ÔNG -->
-                <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=800&q=80" class="card-img">
+                <img src="https://i.postimg.cc/3xw93DjG/physics.png">
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">By ED-ODYSSEY</div>
