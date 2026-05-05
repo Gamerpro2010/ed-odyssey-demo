@@ -2,55 +2,64 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
+import time
 
 # ==========================================
-# 1. CẤU HÌNH TRANG & CSS (UI/UX CHUẨN EDTECH)
+# 1. CẤU HÌNH TRANG & CSS (CHUẨN SAAS/EDTECH)
 # ==========================================
-st.set_page_config(page_title="ED-ODYSSEY | Nền tảng học tập", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="ED-ODYSSEY | Workspace", page_icon="🎓", layout="wide")
 
 st.markdown("""
     <style>
-    /* Reset khoảng cách mặc định để trang thoáng hơn */
-    .block-container { padding-top: 2rem; max-width: 1200px; }
+    /* Làm gọn không gian tổng thể */
+    .block-container { padding-top: 2rem; max-width: 1100px; }
     
-    /* Thiết kế Thẻ Sản Phẩm (Style Udemy/Coursera) */
+    /* Box hiển thị số dư Credit (Sang trọng, tối giản) */
+    .wallet-box {
+        padding: 15px; 
+        border-radius: 8px; 
+        background-color: #1e293b; 
+        border: 1px solid #334155; 
+        text-align: center; 
+        margin-bottom: 20px;
+    }
+    .wallet-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; }
+    .wallet-value { font-size: 2rem; font-weight: 700; color: #38bdf8; }
+    
+    /* Thiết kế thẻ Marketplace */
     .course-card {
         padding: 20px;
-        border-radius: 12px;
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        transition: all 0.3s ease;
+        border-radius: 8px;
+        background-color: #0f172a;
+        border: 1px solid #1e293b;
+        transition: all 0.2s ease;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
-    .course-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        border-color: #3b82f6;
+    .course-card:hover { border-color: #38bdf8; }
+    .course-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; color: #f8fafc; }
+    .course-author { font-size: 0.8rem; color: #64748b; margin-bottom: 12px; }
+    .course-desc { font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.4; }
+    .course-price { font-size: 1.2rem; font-weight: 700; color: #38bdf8; margin-bottom: 15px; }
+    
+    /* Module Workspace (Thay thế các hộp xanh nhàm chán) */
+    .module-box {
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        background-color: #1e293b;
+        margin-bottom: 20px;
     }
-    .course-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
-    .course-author { font-size: 0.85rem; color: #6b7280; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
-    .course-desc { font-size: 0.95rem; opacity: 0.8; margin-bottom: 20px; line-height: 1.5; }
-    .course-price { font-size: 1.5rem; font-weight: 800; color: #2563eb; margin-bottom: 15px; }
-    
-    /* Thiết kế Header của trang */
-    .page-header { font-size: 2.5rem; font-weight: 800; margin-bottom: 5px; }
-    .page-subheader { font-size: 1.1rem; opacity: 0.7; margin-bottom: 30px; font-weight: 400; }
-    
-    /* Chỉnh sửa Sidebar cho giống Dashboard chuyên nghiệp */
-    [data-testid="stSidebar"] { border-right: 1px solid rgba(128, 128, 128, 0.1); }
-    .wallet-box { padding: 15px; border-radius: 10px; background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); text-align: center; margin-bottom: 20px; }
-    .wallet-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #3b82f6; font-weight: 600; }
-    .wallet-value { font-size: 1.8rem; font-weight: 800; }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. HỆ THỐNG DỮ LIỆU & LOGIC GIAO DỊCH
+# 2. KHỞI TẠO STATE (Đơn vị nhỏ gọn: 50 CR)
 # ==========================================
 if 'credit_balance' not in st.session_state:
-    st.session_state.credit_balance = 50000 
+    st.session_state.credit_balance = 50 
 if 'owned_tools' not in st.session_state:
     st.session_state.owned_tools = []
 
@@ -65,115 +74,126 @@ def process_purchase(tool_name, price):
         st.error("Số dư Credit không đủ. Vui lòng nạp thêm.")
 
 # ==========================================
-# 3. SIDEBAR (DASHBOARD NAVIGATION)
+# 3. SIDEBAR (DASHBOARD CHUYÊN NGHIỆP)
 # ==========================================
 with st.sidebar:
     st.markdown("### 🎓 ED-ODYSSEY")
+    st.caption("Workspace & Marketplace")
     st.write("---")
     
-    # Ví điện tử (Thiết kế tinh tế, không màu mè)
+    # Hiển thị số dư nhỏ gọn, bỏ phần nghìn
     st.markdown(f"""
         <div class="wallet-box">
             <div class="wallet-label">Số dư Credit</div>
-            <div class="wallet-value">{st.session_state.credit_balance:,.0f}</div>
+            <div class="wallet-value">{st.session_state.credit_balance} CR</div>
         </div>
     """, unsafe_allow_html=True)
     
+    # LOGIC NẠP TIỀN THỰC TẾ
     with st.popover("➕ Nạp Credit", use_container_width=True):
-        st.markdown("**Chọn kênh thanh toán:**")
-        method = st.selectbox("Phương thức", ["Ví MoMo", "Bank Transfer (VietQR)"], label_visibility="collapsed")
-        if st.button("Xác nhận nạp 20,000 CR", type="primary", use_container_width=True):
-            st.session_state.credit_balance += 20000
-            st.rerun()
+        st.markdown("**Quy đổi: 1.000 VNĐ = 1 CR**")
+        method = st.selectbox("Kênh thanh toán", ["Ví MoMo", "VietQR (Ngân hàng)"])
+        amount = st.number_input("Số lượng Credit muốn nạp", min_value=10, step=10, value=20)
+        
+        st.info(f"Vui lòng chuyển {amount * 1000:,} VNĐ qua {method} với nội dung: NẠP.")
+        
+        # Bắt buộc xác nhận mới hiện nút nạp (Chống cộng tiền ảo)
+        if st.checkbox("Tôi xác nhận đã chuyển tiền thật"):
+            if st.button("Hoàn tất giao dịch", type="primary", use_container_width=True):
+                with st.spinner("Đang đối soát giao dịch..."):
+                    time.sleep(1) # Giả lập thời gian server kiểm tra ngân hàng
+                    st.session_state.credit_balance += amount
+                    st.rerun()
 
     st.write("---")
-    st.markdown("**MENU CHÍNH**")
-    menu = st.radio("Menu", ["📦 Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
+    menu = st.radio("ĐIỀU HƯỚNG", ["📦 Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
 
 # ==========================================
 # 4. KHU VỰC CHÍNH (MAIN CONTENT)
 # ==========================================
 
 if menu == "📦 Marketplace":
-    st.markdown('<div class="page-header">Blueprint Marketplace</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-subheader">Khám phá các công cụ hỗ trợ học tập chuyên sâu được xây dựng bởi cộng đồng.</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Blueprint Marketplace</h2>', unsafe_allow_html=True)
+    st.write("Trao đổi các công cụ hỗ trợ học tập thực chiến (Pay-as-you-go).")
+    st.write("")
     
     c1, c2, c3 = st.columns(3)
     
-    # Sản phẩm 1
     with c1:
         st.markdown(f"""
             <div class="course-card">
                 <div>
                     <div class="course-title">Mô Phỏng Vật Lý 10</div>
                     <div class="course-author">🏢 Nền tảng ED-ODYSSEY</div>
-                    <div class="course-desc">Môi trường giả lập tương tác chuyên sâu cho chương trình Vật Lý. Phân tích vector và động học.</div>
+                    <div class="course-desc">Môi trường giả lập tương tác chuyên sâu. Phân tích vector và động học thời gian thực.</div>
                 </div>
-                <div>
-                    <div class="course-price">15,000 CR</div>
-                </div>
+                <div class="course-price">15 CR</div>
             </div>
         """, unsafe_allow_html=True)
-        if st.button("Mở khóa bản quyền", key="buy1", use_container_width=True, type="primary"):
-            process_purchase("Mô Phỏng Vật Lý 10", 15000)
+        if st.button("Mua bằng Credit", key="b1", use_container_width=True):
+            process_purchase("Mô Phỏng Vật Lý 10", 15)
 
-    # Sản phẩm 2
     with c2:
         st.markdown(f"""
             <div class="course-card">
                 <div>
                     <div class="course-title">Đồ Thị Động Học</div>
                     <div class="course-author">👤 MathWiz_01</div>
-                    <div class="course-desc">Hệ thống xử lý dữ liệu vận tốc - thời gian. Tự động tìm cực đại, cực tiểu và tính toán gia tốc.</div>
+                    <div class="course-desc">Hệ thống xử lý dữ liệu vận tốc - thời gian. Tự động tìm cực đại, cực tiểu và gia tốc.</div>
                 </div>
-                <div>
-                    <div class="course-price">10,000 CR</div>
-                </div>
+                <div class="course-price">10 CR</div>
             </div>
         """, unsafe_allow_html=True)
-        if st.button("Mở khóa bản quyền", key="buy2", use_container_width=True, type="primary"):
-            process_purchase("Đồ Thị Động Học", 10000)
+        if st.button("Mua bằng Credit", key="b2", use_container_width=True):
+            process_purchase("Đồ Thị Động Học", 10)
 
-    # Sản phẩm 3
     with c3:
         st.markdown(f"""
             <div class="course-card">
                 <div>
                     <div class="course-title">Xử Lý Tích Vô Hướng</div>
                     <div class="course-author">👤 CodeNinja_HN</div>
-                    <div class="course-desc">Thuật toán xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán hình học lớp 10.</div>
+                    <div class="course-desc">Thuật toán xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán hình học 10.</div>
                 </div>
-                <div>
-                    <div class="course-price">12,000 CR</div>
-                </div>
+                <div class="course-price">12 CR</div>
             </div>
         """, unsafe_allow_html=True)
-        if st.button("Mở khóa bản quyền", key="buy3", use_container_width=True, type="primary"):
-            process_purchase("Xử Lý Tích Vô Hướng", 12000)
+        if st.button("Mua bằng Credit", key="b3", use_container_width=True):
+            process_purchase("Xử Lý Tích Vô Hướng", 12)
 
 elif menu == "💻 My Workspace":
-    st.markdown('<div class="page-header">My Workspace</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-subheader">Nơi truy cập các công cụ bạn đã sở hữu.</div>', unsafe_allow_html=True)
+    st.markdown('<h2>My Workspace</h2>', unsafe_allow_html=True)
+    st.write("Không gian làm việc và chạy các ứng dụng bạn đã sở hữu.")
+    st.divider()
     
     if not st.session_state.owned_tools:
-        st.info("Workspace của bạn đang trống. Hãy ghé Marketplace để tìm kiếm công cụ phù hợp.")
+        st.info("Workspace trống. Hãy ghé Marketplace để trang bị công cụ.")
     else:
+        # Nhúng Iframe web Vật Lý 10
         if "Mô Phỏng Vật Lý 10" in st.session_state.owned_tools:
-            st.markdown("### 🚀 Trình giả lập: Mô Phỏng Vật Lý 10")
-            # Nhúng link Iframe sạch
-            components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=800, scrolling=True)
-            st.divider()
+            st.markdown("### 🚀 Mô Phỏng Vật Lý 10")
+            components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=700, scrolling=True)
+            st.write("---")
             
+        # Thiết kế lại UI giả lập thay cho hộp xanh trống rỗng
         if "Đồ Thị Động Học" in st.session_state.owned_tools:
-            st.markdown("### 📈 Đồ Thị Động Học")
-            st.success("Module đang ở trạng thái chờ nạp dữ liệu (.csv).")
-            st.divider()
+            st.markdown('<div class="module-box">', unsafe_allow_html=True)
+            st.markdown("#### 📈 Module Phân Tích Đồ Thị Động Học")
+            st.write("Công cụ đang chờ nạp dữ liệu đầu vào để bắt đầu quá trình phân tích.")
+            st.file_uploader("Tải lên file dữ liệu (.csv, .xlsx) của bạn", type=['csv', 'xlsx'])
+            st.button("Bắt đầu trích xuất đồ thị", disabled=True)
+            st.markdown('</div>', unsafe_allow_html=True)
             
+        # Thiết kế lại UI giả lập cho Tích vô hướng
         if "Xử Lý Tích Vô Hướng" in st.session_state.owned_tools:
-            st.markdown("### 🧮 Xử Lý Tích Vô Hướng")
-            st.success("Engine toán học đã được khởi động.")
+            st.markdown('<div class="module-box">', unsafe_allow_html=True)
+            st.markdown("#### 🧮 Engine Tích Vô Hướng")
+            col_a, col_b = st.columns(2)
+            col_a.text_input("Nhập toạ độ Vector A (Ví dụ: 2, -3):")
+            col_b.text_input("Nhập toạ độ Vector B (Ví dụ: 1, 5):")
+            st.button("Khởi chạy tính toán", type="primary")
+            st.markdown('</div>', unsafe_allow_html=True)
 
 elif menu == "🎯 Bounty Board":
-    st.markdown('<div class="page-header">Bounty Board</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-subheader">Nhận nhiệm vụ từ cộng đồng để kiếm thêm Credit.</div>', unsafe_allow_html=True)
-    st.info("Tính năng này đang trong giai đoạn hoàn thiện giao diện.")
+    st.markdown('<h2>Bounty Board</h2>', unsafe_allow_html=True)
+    st.info("Đang bảo trì và cập nhật hệ thống nhiệm vụ mới.")
