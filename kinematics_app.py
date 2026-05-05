@@ -11,39 +11,33 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="header">📈 Đồ Thị Động Học V1.0</div>', unsafe_allow_html=True)
+st.markdown('<div class="header">📈 Đồ Thị Động Học V1.1</div>', unsafe_allow_html=True)
 
 col1, col2 = st.columns([1, 2], gap="large")
 
 with col1:
     st.subheader("📥 Nhập dữ liệu")
-    uploaded_file = st.file_uploader("Tải file thí nghiệm (.csv)", type=['csv'])
+    uploaded_file = st.file_uploader("Chọn file CSV thí nghiệm", type=['csv'], key="kinematics_upload")
+    
+    if uploaded_file is not None:
+        # Đọc dữ liệu ngay lập tức
+        df = pd.read_csv(uploaded_file)
+        st.write("📋 Xem trước dữ liệu:")
+        st.dataframe(df.head(5), use_container_width=True)
 
 with col2:
-    st.subheader("📊 Kết quả phân tích")
+    st.subheader("📊 Đồ thị phân tích")
     if uploaded_file is not None:
         try:
-            # Đọc dữ liệu
-            df = pd.read_csv(uploaded_file)
+            # Tự động tìm cột phù hợp
+            cols = df.columns.tolist()
+            x_axis = st.selectbox("Trục hoành (Thời gian):", cols, index=0)
+            y_axis = st.selectbox("Trục tung (Vận tốc/Quãng đường):", cols, index=1 if len(cols)>1 else 0)
             
-            # Kiểm tra nếu file có dữ liệu
-            if not df.empty:
-                # Tự động lấy 2 cột đầu tiên nếu không tìm thấy tên 'time'/'velocity'
-                x_col = 'time' if 'time' in df.columns else df.columns[0]
-                y_col = 'velocity' if 'velocity' in df.columns else df.columns[1]
-                
-                fig = px.line(df, x=x_col, y=y_col, 
-                             title=f'Đồ thị {y_col} theo {x_col}',
-                             template="plotly_dark",
-                             line_shape="spline")
-                fig.update_traces(line_color='#38bdf8', line_width=3)
-                st.plotly_chart(fig, use_container_width=True)
-                
-                # Tính toán nhanh
-                delta_v = df[y_col].iloc[-1] - df[y_col].iloc[0]
-                delta_t = df[x_col].iloc[-1] - df[x_col].iloc[0]
-                st.success(f"Phân tích hoàn tất! Gia tốc ước tính: {delta_v/delta_t:.2f} m/s²")
+            fig = px.line(df, x=x_axis, y=y_axis, markers=True, template="plotly_dark")
+            fig.update_traces(line_color='#38bdf8')
+            st.plotly_chart(fig, use_container_width=True)
         except Exception as e:
-            st.error(f"Lỗi cấu trúc file: {e}")
+            st.error(f"Lỗi hiển thị: {e}")
     else:
-        st.info("Hệ thống đang đợi file .csv từ ông...")
+        st.info("Hệ thống sẵn sàng. Hãy tải file lên ở cột bên trái.")
