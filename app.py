@@ -214,7 +214,7 @@ if menu == "🛒 Blueprint Marketplace":
             <div class="cyber-card">
                 <div class="img-wrapper">
                     <!-- Ảnh dữ liệu mạng cực đẹp (Dark Blue) -->
-                    <img src="https://images.unsplash.com/photo-1649360813952-475269ed9a44?auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80">
                 </div>
                 <div class="card-content">
                     <div>
