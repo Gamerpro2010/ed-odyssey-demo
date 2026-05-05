@@ -5,81 +5,74 @@ import streamlit.components.v1 as components
 import time
 
 # ==========================================
-# 1. CẤU HÌNH TRANG & CSS (CYBER-GLASS UI)
+# 1. CẤU HÌNH TRANG & CSS (FIX LỖI GIAO DIỆN)
 # ==========================================
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
 st.markdown("""
     <style>
-    /* Bố cục tổng thể thoáng hơn */
     .block-container { padding-top: 1.5rem; max-width: 1200px; }
     
-    /* 1. THIẾT KẾ THẺ ID Ở SIDEBAR (ĐẶC BIỆT) */
+    /* Thẻ ID Sidebar */
     .founder-pass {
         background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 58, 138, 0.9) 100%);
         border: 1px solid rgba(56, 189, 248, 0.3);
         border-radius: 12px;
         padding: 20px;
-        position: relative;
-        overflow: hidden;
         box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
-    .founder-pass::after {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
-        transform: skewX(-20deg); animation: shine 4s infinite;
-    }
-    @keyframes shine { 0% {left: -100%;} 20% {left: 200%;} 100% {left: 200%;} }
-    
     .pass-header { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-    .pass-balance { font-size: 2.5rem; font-weight: 900; color: #38bdf8; line-height: 1; text-shadow: 0 0 10px rgba(56,189,248,0.4); }
+    .pass-balance { font-size: 2.5rem; font-weight: 900; color: #38bdf8; line-height: 1; }
     .pass-currency { font-size: 1rem; color: #e2e8f0; }
     .pass-user { font-size: 0.9rem; color: #f8fafc; font-weight: 700; margin-top: 15px; letter-spacing: 1px; }
     .pass-id { font-size: 0.65rem; color: #64748b; font-family: monospace; }
 
-    /* 2. THIẾT KẾ CARD SẢN PHẨM Ở MARKETPLACE */
+    /* THIẾT KẾ CARD - Gắn liền nút bấm */
     .cyber-card {
         background-color: #0f172a;
-        border-radius: 12px;
+        border-radius: 12px 12px 0 0; /* Bỏ bo góc ở dưới để dính vào nút */
         overflow: hidden;
         border: 1px solid #1e293b;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 15px;
+        border-bottom: none; /* Bỏ viền đáy */
     }
-    .cyber-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(56, 189, 248, 0.15);
-        border-color: #38bdf8;
-    }
-    .card-img {
-        width: 100%; height: 150px; object-fit: cover;
-        border-bottom: 1px solid #1e293b;
-    }
+    /* Ép ảnh không bị méo */
+    .card-img { width: 100%; height: 160px; object-fit: cover; display: block; border-bottom: 1px solid #1e293b; }
     .card-content { padding: 15px; }
-    .c-title { font-size: 1.2rem; font-weight: 800; color: #f8fafc; margin-bottom: 5px; }
+    .c-title { font-size: 1.1rem; font-weight: 800; color: #f8fafc; margin-bottom: 5px; }
     .c-author { font-size: 0.75rem; color: #38bdf8; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
     .c-desc { font-size: 0.85rem; color: #94a3b8; line-height: 1.5; height: 60px; overflow: hidden; margin-bottom: 15px; }
-    .c-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #334155; padding-top: 15px; }
-    .c-price { font-size: 1.2rem; font-weight: 800; color: #fff; }
+    .c-price { font-size: 1.2rem; font-weight: 800; color: #fff; border-top: 1px dashed #334155; padding-top: 10px;}
 
-    /* 3. ĐỔI MÀU NÚT BẤM (Xóa màu đỏ, dùng Gradient Xanh) */
-    button[kind="primary"] {
+    /* NÚT BẤM STREAMLIT ĐƯỢC KÉO SÁT VÀO CARD */
+    div.stButton > button {
         background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%) !important;
         border: none !important; color: white !important; font-weight: 700 !important;
-        border-radius: 6px !important; transition: 0.3s !important;
+        border-radius: 0 0 12px 12px !important; /* Bo góc ở dưới */
+        width: 100% !important;
+        margin-top: -15px !important; /* KÉO NÚT LÊN ĐỂ DÍNH VÀO THẺ */
+        transition: 0.3s !important;
     }
-    button[kind="primary"]:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(56,189,248,0.5) !important; }
+    div.stButton > button:hover { filter: brightness(1.1); box-shadow: 0 10px 15px rgba(56,189,248,0.2) !important; }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. KHỞI TẠO STATE HỆ THỐNG
+# 2. KHỞI TẠO STATE & FIX LỖI "CLICK HAI LẦN"
 # ==========================================
 if 'credit_balance' not in st.session_state:
     st.session_state.credit_balance = 50 
 if 'owned_tools' not in st.session_state:
     st.session_state.owned_tools = []
+# Biến cờ hiệu để hiện pháo hoa sau khi trang F5
+if 'show_success' not in st.session_state:
+    st.session_state.show_success = None
+
+# Nếu có cờ hiệu mua thành công, hiện pháo hoa và reset cờ
+if st.session_state.show_success:
+    st.toast(f"Mở khóa thành công: {st.session_state.show_success}", icon="✅")
+    st.balloons()
+    st.session_state.show_success = None
 
 def process_purchase(tool_name, price):
     if tool_name in st.session_state.owned_tools:
@@ -87,19 +80,20 @@ def process_purchase(tool_name, price):
     elif st.session_state.credit_balance >= price:
         st.session_state.credit_balance -= price
         st.session_state.owned_tools.append(tool_name)
-        st.toast(f"Mở khóa thành công: {tool_name}", icon="✅")
-        st.balloons()
+        # Bật cờ hiệu thành công
+        st.session_state.show_success = tool_name
+        # ÉP TRANG WEB F5 NGAY LẬP TỨC ĐỂ CẬP NHẬT SỐ DƯ
+        st.rerun() 
     else:
         st.error("Số dư Credit không đủ!")
 
 # ==========================================
-# 3. SIDEBAR (HỆ THỐNG ĐIỀU HƯỚNG MỚI)
+# 3. SIDEBAR (KHÔNG DÙNG ẢNH MẠNG ĐỂ TRÁNH LỖI)
 # ==========================================
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/1162/1162846.png", width=50)
+    st.markdown("## 🚀 ED-ODYSSEY")
     st.write("---")
     
-    # Thẻ ID Cá nhân hóa siêu ngầu
     st.markdown(f"""
         <div class="founder-pass">
             <div class="pass-header">Hệ thống Ody-Credit</div>
@@ -142,10 +136,8 @@ if menu == "🛒 Blueprint Marketplace":
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">By ED-ODYSSEY</div>
-                    <div class="c-desc">Môi trường giả lập tương tác Vật Lý. Phân tích vector và động học ném xiên thời gian thực.</div>
-                    <div class="c-footer">
-                        <div class="c-price">15 CR</div>
-                    </div>
+                    <div class="c-desc">Môi trường giả lập tương tác Vật Lý. Phân tích vector và động học ném xiên.</div>
+                    <div class="c-price">15 CR</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -159,10 +151,8 @@ if menu == "🛒 Blueprint Marketplace":
                 <div class="card-content">
                     <div class="c-title">Đồ Thị Động Học</div>
                     <div class="c-author">By MathWiz_01</div>
-                    <div class="c-desc">Thuật toán xử lý dữ liệu vận tốc - thời gian. Tự động tìm cực đại, cực tiểu và vẽ gia tốc.</div>
-                    <div class="c-footer">
-                        <div class="c-price">10 CR</div>
-                    </div>
+                    <div class="c-desc">Thuật toán xử lý dữ liệu vận tốc. Tự động tìm cực đại, cực tiểu và vẽ gia tốc.</div>
+                    <div class="c-price">10 CR</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -176,10 +166,8 @@ if menu == "🛒 Blueprint Marketplace":
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">By CodeNinja_HN</div>
-                    <div class="c-desc">Engine xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán hình học lớp 10.</div>
-                    <div class="c-footer">
-                        <div class="c-price">12 CR</div>
-                    </div>
+                    <div class="c-desc">Engine xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán 10.</div>
+                    <div class="c-price">12 CR</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
