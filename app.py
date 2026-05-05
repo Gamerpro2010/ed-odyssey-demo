@@ -240,7 +240,7 @@ elif menu == "💻 My Workspace":
                 elif tool == "Đồ Thị Động Học":
                     # THAY LINK WEB ĐỒ THỊ CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
                     # Ví dụ: https://sonhns-kinematics.streamlit.app/?embed=true
-                    components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?fbclid=IwY2xjawRm6TFleHRuA2FlbQIxMABicmlkETFrYUxpSnpFNkdJcmxFc0k0c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgC7DOGZqlInvnydpTI-3EdJ6GTidXq2CaRKkNrwhIzpdseJHp1iBb539Sa2_aem_tHbZwSnB1xeX4PkliE2ROQ/?embed=true", height=850, scrolling=True)
+                    components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Xử Lý Tích Vô Hướng":
                     # THAY LINK WEB VECTOR CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
