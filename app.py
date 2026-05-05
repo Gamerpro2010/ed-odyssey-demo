@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import time
 
 # ==========================================
-# 1. CẤU HÌNH TRANG & CSS (FIX LỖI GIAO DIỆN)
+# 1. CẤU HÌNH TRANG & CSS (FIX ẢNH VÀ GIAO DIỆN)
 # ==========================================
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
@@ -31,12 +31,12 @@ st.markdown("""
     /* THIẾT KẾ CARD - Gắn liền nút bấm */
     .cyber-card {
         background-color: #0f172a;
-        border-radius: 12px 12px 0 0; /* Bỏ bo góc ở dưới để dính vào nút */
+        border-radius: 12px 12px 0 0; 
         overflow: hidden;
         border: 1px solid #1e293b;
-        border-bottom: none; /* Bỏ viền đáy */
+        border-bottom: none; 
     }
-    /* Ép ảnh không bị méo */
+    /* Ép ảnh hiển thị căng đét, không bị méo hay có viền trắng */
     .card-img { width: 100%; height: 160px; object-fit: cover; display: block; border-bottom: 1px solid #1e293b; }
     .card-content { padding: 15px; }
     .c-title { font-size: 1.1rem; font-weight: 800; color: #f8fafc; margin-bottom: 5px; }
@@ -44,13 +44,13 @@ st.markdown("""
     .c-desc { font-size: 0.85rem; color: #94a3b8; line-height: 1.5; height: 60px; overflow: hidden; margin-bottom: 15px; }
     .c-price { font-size: 1.2rem; font-weight: 800; color: #fff; border-top: 1px dashed #334155; padding-top: 10px;}
 
-    /* NÚT BẤM STREAMLIT ĐƯỢC KÉO SÁT VÀO CARD */
+    /* NÚT BẤM KÉO SÁT VÀO CARD */
     div.stButton > button {
         background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%) !important;
         border: none !important; color: white !important; font-weight: 700 !important;
-        border-radius: 0 0 12px 12px !important; /* Bo góc ở dưới */
+        border-radius: 0 0 12px 12px !important; 
         width: 100% !important;
-        margin-top: -15px !important; /* KÉO NÚT LÊN ĐỂ DÍNH VÀO THẺ */
+        margin-top: -15px !important; 
         transition: 0.3s !important;
     }
     div.stButton > button:hover { filter: brightness(1.1); box-shadow: 0 10px 15px rgba(56,189,248,0.2) !important; }
@@ -64,11 +64,9 @@ if 'credit_balance' not in st.session_state:
     st.session_state.credit_balance = 50 
 if 'owned_tools' not in st.session_state:
     st.session_state.owned_tools = []
-# Biến cờ hiệu để hiện pháo hoa sau khi trang F5
 if 'show_success' not in st.session_state:
     st.session_state.show_success = None
 
-# Nếu có cờ hiệu mua thành công, hiện pháo hoa và reset cờ
 if st.session_state.show_success:
     st.toast(f"Mở khóa thành công: {st.session_state.show_success}", icon="✅")
     st.balloons()
@@ -80,15 +78,13 @@ def process_purchase(tool_name, price):
     elif st.session_state.credit_balance >= price:
         st.session_state.credit_balance -= price
         st.session_state.owned_tools.append(tool_name)
-        # Bật cờ hiệu thành công
         st.session_state.show_success = tool_name
-        # ÉP TRANG WEB F5 NGAY LẬP TỨC ĐỂ CẬP NHẬT SỐ DƯ
         st.rerun() 
     else:
         st.error("Số dư Credit không đủ!")
 
 # ==========================================
-# 3. SIDEBAR (KHÔNG DÙNG ẢNH MẠNG ĐỂ TRÁNH LỖI)
+# 3. SIDEBAR (DÙNG EMOJI THAY VÌ ẢNH ĐỂ KHÔNG BỊ LỖI)
 # ==========================================
 with st.sidebar:
     st.markdown("## 🚀 ED-ODYSSEY")
@@ -132,7 +128,8 @@ if menu == "🛒 Blueprint Marketplace":
     with col1:
         st.markdown("""
             <div class="cyber-card">
-                <img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=500&q=80" class="card-img">
+                <!-- THAY LINK ẢNH CỦA ÔNG VÀO ĐÂY (Ở GIỮA CẶP NGOẶC KÉP CỦA SRC) -->
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">By ED-ODYSSEY</div>
@@ -147,7 +144,8 @@ if menu == "🛒 Blueprint Marketplace":
     with col2:
         st.markdown("""
             <div class="cyber-card">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" class="card-img">
+                <!-- Ảnh tia laser đồ thị dữ liệu chuẩn dark mode -->
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Đồ Thị Động Học</div>
                     <div class="c-author">By MathWiz_01</div>
@@ -162,7 +160,8 @@ if menu == "🛒 Blueprint Marketplace":
     with col3:
         st.markdown("""
             <div class="cyber-card">
-                <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=500&q=80" class="card-img">
+                <!-- Ảnh ma trận / vector grid không gian -->
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">By CodeNinja_HN</div>
