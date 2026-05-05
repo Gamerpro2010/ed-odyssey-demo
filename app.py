@@ -3,23 +3,9 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
 import time
-import base64
-import os
 
 # ==========================================
-# HÀM XỬ LÝ ẢNH TRONG MÁY THÀNH LINK HTML
-# ==========================================
-def get_image_base64(file_path):
-    # Nếu file tồn tại, chuyển thành mã Base64 để nhúng vào thẻ <img>
-    if os.path.exists(file_path):
-        with open(file_path, "rb") as img_file:
-            encoded_string = base64.b64encode(img_file.read()).decode()
-            return f"data:image/jpeg;base64,{encoded_string}"
-    # Nếu quên chưa lưu ảnh, dùng tạm ảnh mạng để web không bị lỗi
-    return "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=500&q=80"
-
-# ==========================================
-# 1. CẤU HÌNH TRANG & CSS (GIAO DIỆN CYBER)
+# 1. CẤU HÌNH TRANG & CSS (GIAO DIỆN CYBER CHUẨN MỰC)
 # ==========================================
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
@@ -71,7 +57,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. KHỞI TẠO STATE
+# 2. KHỞI TẠO STATE & XỬ LÝ THANH TOÁN
 # ==========================================
 if 'credit_balance' not in st.session_state:
     st.session_state.credit_balance = 50 
@@ -97,7 +83,7 @@ def process_purchase(tool_name, price):
         st.error("Số dư Credit không đủ!")
 
 # ==========================================
-# 3. SIDEBAR
+# 3. SIDEBAR (THÔNG TIN NGƯỜI DÙNG)
 # ==========================================
 with st.sidebar:
     st.markdown("## 🚀 ED-ODYSSEY")
@@ -139,11 +125,10 @@ if menu == "🛒 Blueprint Marketplace":
     col1, col2, col3 = st.columns(3, gap="medium")
     
     with col1:
-        # CẠP NHẬT ẢNH 1: Load trực tiếp từ ảnh của ông
-        img1_b64 = get_image_base64("physics.jpg")
-        st.markdown(f"""
+        st.markdown("""
             <div class="cyber-card">
-                <img src="{img1_b64}" class="card-img">
+                <!-- Ảnh Vũ trụ/Vật lý trừu tượng, tone Dark Blue -->
+                <img src="https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">By ED-ODYSSEY</div>
@@ -156,9 +141,9 @@ if menu == "🛒 Blueprint Marketplace":
             process_purchase("Mô Phỏng Vật Lý 10", 15)
 
     with col2:
-        # CẬP NHẬT ẢNH 2: Hình ảnh đồ thị rực rỡ, dark mode
         st.markdown("""
             <div class="cyber-card">
+                <!-- Ảnh Dashboard dữ liệu, tone Dark/Neon -->
                 <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Đồ Thị Động Học</div>
@@ -172,10 +157,10 @@ if menu == "🛒 Blueprint Marketplace":
             process_purchase("Đồ Thị Động Học", 10)
 
     with col3:
-        # CẬP NHẬT ẢNH 3: Hình ảnh không gian ma trận/toán học cyber
         st.markdown("""
             <div class="cyber-card">
-                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80" class="card-img">
+                <!-- Ảnh Ma trận công nghệ, tone Cyan/Green Neon -->
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" class="card-img">
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">By CodeNinja_HN</div>
