@@ -1,196 +1,143 @@
 import streamlit as st
-import numpy as np
-import plotly.graph_objects as go
-import time
 
 # ==========================================
 # 1. CẤU HÌNH TRANG & GIAO DIỆN (UI/UX)
-# Đạt chuẩn "Dark Mode" & "Hacker Command Center" cho Gen Z
 # ==========================================
-st.set_page_config(page_title="ED-ODYSSEY | P2P STEM Marketplace", page_icon="🚀", layout="wide")
+st.set_page_config(
+    page_title="ED-ODYSSEY | Blueprint Marketplace",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Custom CSS cho phong cách Cyberpunk/Dark Mode
+# Custom CSS phong cách SaaS/Fintech chuyên nghiệp
 st.markdown("""
     <style>
-    .stApp {
-        background-color: #0E1117;
-        color: #00FF41;
-        font-family: 'Courier New', Courier, monospace;
-    }
-    .metric-card {
-        background-color: #1E1E1E;
-        border: 1px solid #00FF41;
-        padding: 15px;
-        border-radius: 5px;
+    /* Ẩn các thành phần mặc định không cần thiết của Streamlit */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Thiết kế thẻ Ví tiền (Wallet) trên Sidebar */
+    .wallet-card {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
         text-align: center;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        margin-bottom: 25px;
     }
-    h1, h2, h3 { color: #00FF41 !important; text-transform: uppercase; }
-    .stButton>button {
-        width: 100%;
-        background-color: #00FF41;
-        color: #000000;
-        font-weight: bold;
-        border: none;
-    }
-    .stButton>button:hover {
-        background-color: #000000;
-        color: #00FF41;
-        border: 1px solid #00FF41;
+    .wallet-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 5px; }
+    .wallet-amount { font-size: 28px; font-weight: 800; letter-spacing: 0.5px; }
+
+    /* Tiêu đề chính của trang */
+    .market-title { font-size: 2.2rem; font-weight: 800; color: #1e40af; margin-bottom: 0px; padding-bottom: 0px; }
+    .market-subtitle { font-size: 1.2rem; font-weight: 600; color: #3b82f6; margin-top: 5px; margin-bottom: 5px; }
+    .market-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 30px; }
+
+    /* Badge tên Creator */
+    .creator-badge {
+        display: inline-block;
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border: 1px solid rgba(59, 130, 246, 0.2);
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. QUẢN LÝ TRẠNG THÁI (SESSION STATE)
-# Giả lập Database & Thanh toán vi mô (MoMo)
+# 2. KHỞI TẠO STATE & XỬ LÝ LOGIC
 # ==========================================
-if 'user_balance' not in st.session_state:
-    st.session_state.user_balance = 50000  # Tặng sẵn 50.000 VNĐ để test
-if 'purchased_blueprints' not in st.session_state:
-    st.session_state.purchased_blueprints = []
-if 'current_view' not in st.session_state:
-    st.session_state.current_view = "Marketplace"
+if 'balance' not in st.session_state:
+    st.session_state.balance = 50000
 
-def buy_item(item_name, price):
-    if item_name in st.session_state.purchased_blueprints:
-        st.warning("Bạn đã sở hữu Blueprint này!")
-    elif st.session_state.user_balance >= price:
-        # Giả lập độ trễ gọi API MoMo Zero-friction
-        with st.spinner("Đang xử lý thanh toán qua API MoMo..."):
-            time.sleep(1)
-        st.session_state.user_balance -= price
-        st.session_state.purchased_blueprints.append(item_name)
-        st.success(f"Thanh toán thành công {price:,.0f} VNĐ! Blueprint đã được mở khóa.")
+# Hàm xử lý mua hàng giả lập
+def handle_purchase(price, item_name):
+    if st.session_state.balance >= price:
+        st.session_state.balance -= price
+        st.toast(f"Giao dịch thành công: Mua {item_name}!", icon="✅")
     else:
-        st.error("Số dư không đủ. Vui lòng nạp thêm qua MoMo!")
+        st.toast("Số dư không đủ để thực hiện giao dịch!", icon="❌")
 
 # ==========================================
-# 3. SIDEBAR - HỒ SƠ HUSTLER & ĐIỀU HƯỚNG
+# 3. THANH ĐIỀU HƯỚNG (SIDEBAR)
 # ==========================================
 with st.sidebar:
-    st.title("⚡ ED-ODYSSEY")
-    st.markdown("---")
-    st.markdown("### 🧑‍💻 HUSTLER PROFILE")
-    st.markdown("**User:** Explorer_GenZ")
-    st.markdown("**Rank:** A (Thợ săn bạc)")
+    st.markdown("### ⚡ ED-ODYSSEY")
+    st.divider()
     
-    # Hiển thị số dư
-    st.markdown(f"<div class='metric-card'><h3>Ví MoMo / Credit</h3><h2>{st.session_state.user_balance:,.0f} ₫</h2></div>", unsafe_allow_html=True)
-    st.markdown("---")
+    # Profile người dùng
+    st.markdown("**👦 HUSTLER PROFILE**")
+    st.markdown("User: **Explorer_GenZ**")
+    st.markdown("Rank: **A (Thợ săn bạc)**")
+    st.write("")
+    
+    # Thẻ Ví tiền chuyên nghiệp
+    st.markdown(f"""
+        <div class="wallet-card">
+            <div class="wallet-title">Ví MoMo / Credit</div>
+            <div class="wallet-amount">{st.session_state.balance:,.0f} đ</div>
+        </div>
+    """, unsafe_allow_html=True)
     
     # Menu điều hướng
-    menu = ["🛒 Blueprint Marketplace", "💻 My Workspace (Đã mua)", "🎯 Bounty Board", "🏛️ Bảo tàng Sai lầm"]
-    choice = st.radio("ĐIỀU HƯỚNG HỆ THỐNG:", menu)
+    st.markdown("**ĐIỀU HƯỚNG HỆ THỐNG:**")
+    menu = st.radio(
+        "Menu",
+        ["🛒 Blueprint Marketplace", "💻 My Workspace (Đã mua)", "🎯 Bounty Board", "🏛️ Bảo tàng Sai lầm"],
+        label_visibility="collapsed"
+    )
 
 # ==========================================
-# 4. GIAO DIỆN CHÍNH (MAIN VIEW)
+# 4. KHU VỰC HIỂN THỊ CHÍNH (MARKETPLACE)
 # ==========================================
-
-# --- VIEW 1: BLUEPRINT MARKETPLACE ---
-if choice == "🛒 Blueprint Marketplace":
-    st.title("🛒 Blueprint Marketplace")
-    st.subheader("Giải pháp Thực chiến - Pay-as-you-go")
-    st.write("Sàn giao dịch ngang hàng (P2P). Thuê Blueprint tương tác chỉ với một ly trà đá.")
+if menu == "🛒 Blueprint Marketplace":
+    # Header
+    st.markdown('<div class="market-title">🛒 BLUEPRINT MARKETPLACE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="market-subtitle">GIẢI PHÁP THỰC CHIẾN - PAY-AS-YOU-GO</div>', unsafe_allow_html=True)
+    st.markdown('<div class="market-desc">Sàn giao dịch ngang hàng (P2P). Thuê Blueprint tương tác chỉ với một ly trà đá.</div>', unsafe_allow_html=True)
     
+    # Danh sách sản phẩm
     col1, col2, col3 = st.columns(3)
     
+    # Sản phẩm 1
     with col1:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.markdown("### 🚀 Ném xiên 360°")
-        st.write("**Creator:** Hustler_Physics99")
-        st.write("Mô phỏng quỹ đạo ném xiên thời gian thực bằng Plotly & NumPy. Phân tích vector vận tốc.")
-        st.write("**Giá thuê 24h: 15.000 VNĐ**")
-        if st.button("Mua bằng MoMo - 15K", key="buy_1"):
-            buy_item("Projectile Motion", 15000)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.subheader("🚀 Ném Xiên 360°")
+            st.markdown('<div class="creator-badge">Creator: Hustler_Physics99</div>', unsafe_allow_html=True)
+            st.write("Mô phỏng quỹ đạo ném xiên thời gian thực bằng Plotly & NumPy. Phân tích vector vận tốc.")
+            st.markdown("**Giá thuê 24h:** :blue[15.000 VNĐ]")
+            
+            if st.button("Mua bằng MoMo - 15K", key="btn_1", use_container_width=True, type="primary"):
+                handle_purchase(15000, "Ném Xiên 360°")
 
+    # Sản phẩm 2
     with col2:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.markdown("### 📈 Đồ thị Động học")
-        st.write("**Creator:** MathWiz_01")
-        st.write("Xử lý dữ liệu vận tốc - thời gian. Tìm cực đại, cực tiểu tự động.")
-        st.write("**Giá thuê 24h: 10.000 VNĐ**")
-        if st.button("Mua bằng MoMo - 10K", key="buy_2"):
-            buy_item("Kinematics Graph", 10000)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.subheader("📈 Đồ Thị Động Học")
+            st.markdown('<div class="creator-badge">Creator: MathWiz_01</div>', unsafe_allow_html=True)
+            st.write("Xử lý dữ liệu vận tốc - thời gian. Tự động tìm cực đại, cực tiểu và phân tích gia tốc.")
+            st.markdown("**Giá thuê 24h:** :blue[10.000 VNĐ]")
+            
+            if st.button("Mua bằng MoMo - 10K", key="btn_2", use_container_width=True, type="primary"):
+                handle_purchase(10000, "Đồ Thị Động Học")
 
+    # Sản phẩm 3
     with col3:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.markdown("### 🧮 Tool Tích Vô Hướng")
-        st.write("**Creator:** CodeNinja_HN")
-        st.write("Thuật toán Python xử lý ma trận và cảnh báo sai sót ký hiệu Vector.")
-        st.write("**Giá thuê 24h: 12.000 VNĐ**")
-        if st.button("Mua bằng MoMo - 12K", key="buy_3"):
-            buy_item("Vector Matrix", 12000)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.subheader("🧮 Tool Tích Vô Hướng")
+            st.markdown('<div class="creator-badge">Creator: CodeNinja_HN</div>', unsafe_allow_html=True)
+            st.write("Thuật toán Python xử lý ma trận và tự động cảnh báo sai sót ký hiệu Vector cho Toán 10.")
+            st.markdown("**Giá thuê 24h:** :blue[12.000 VNĐ]")
+            
+            if st.button("Mua bằng MoMo - 12K", key="btn_3", use_container_width=True, type="primary"):
+                handle_purchase(12000, "Tool Tích Vô Hướng")
 
-# --- VIEW 2: MY WORKSPACE (Trải nghiệm tương tác STEM) ---
-elif choice == "💻 My Workspace (Đã mua)":
-    st.title("💻 My Workspace")
-    st.write("Không gian tương tác thực chiến của bạn.")
-    
-    if len(st.session_state.purchased_blueprints) == 0:
-        st.info("Bạn chưa sở hữu Blueprint nào. Hãy quay lại Marketplace để nạp vũ khí!")
-    
-    if "Projectile Motion" in st.session_state.purchased_blueprints:
-        st.markdown("---")
-        st.subheader("🚀 MODULE: MÔ PHỎNG QUỸ ĐẠO NÉM XIÊN (Interactive Blueprint)")
-        st.write("Sử dụng lõi tính toán **NumPy** và engine render đồ thị **Plotly**.")
-        
-        # UI Tương tác cho học sinh
-        c1, c2, c3 = st.columns(3)
-        v0 = c1.slider("Vận tốc ban đầu (v0) [m/s]", 10, 100, 50)
-        angle = c2.slider("Góc ném (θ) [Độ]", 10, 90, 45)
-        g = c3.slider("Gia tốc trọng trường (g) [m/s²]", 9.0, 10.0, 9.8)
-        
-        # Xử lý Toán học bằng NumPy (C-level execution)
-        theta_rad = np.radians(angle)
-        t_flight = 2 * v0 * np.sin(theta_rad) / g
-        t = np.linspace(0, t_flight, num=200)
-        
-        # Phương trình chuyển động
-        x = v0 * np.cos(theta_rad) * t
-        y = v0 * np.sin(theta_rad) * t - 0.5 * g * t**2
-        
-        max_height = (v0**2 * (np.sin(theta_rad)**2)) / (2 * g)
-        max_distance = x[-1]
-        
-        # Trực quan hóa dữ liệu bằng Plotly (Dynamic Data Visualization)
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Quỹ đạo', line=dict(color='#00FF41', width=3)))
-        fig.add_trace(go.Scatter(x=[x[np.argmax(y)]], y=[max_height], mode='markers', name='Đỉnh', marker=dict(color='red', size=10)))
-        
-        fig.update_layout(
-            title="Đồ thị Động học 2D",
-            xaxis_title="Trục X - Độ dịch chuyển (m)",
-            yaxis_title="Trục Y - Độ cao (m)",
-            template="plotly_dark",
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-        )
-        st.plotly_chart(fig, use_container_width=True)
-        
-        st.success(f"**Kết quả tính toán:** Tầm xa tối đa: {max_distance:.2f} m | Độ cao tối đa: {max_height:.2f} m")
-
-# --- VIEW 3: BOUNTY BOARD ---
-elif choice == "🎯 Bounty Board":
-    st.title("🎯 Bảng Săn Tiền Thưởng (Bounty Board)")
-    st.write("Nơi Hustler kiếm tiền từ chất xám. Viết Code/Tool để giải quyết vấn đề của Explorer.")
-    
-    bounties = [
-        {"Task": "Thuật toán tối ưu hóa diện tích bề mặt khối đa diện", "Rank": "S", "Reward": "1,000,000 VNĐ", "Status": "Open"},
-        {"Task": "Mô phỏng lực ma sát mặt phẳng nghiêng (Có slider chỉnh hệ số)", "Rank": "A", "Reward": "150,000 VNĐ", "Status": "In Progress"},
-        {"Task": "Tool tự động tính phương sai, tứ phân vị từ file Excel", "Rank": "B", "Reward": "50,000 VNĐ", "Status": "Open"}
-    ]
-    st.table(bounties)
-    st.button("🔥 Nhận Nhiệm Vụ (Submit Code)")
-
-# --- VIEW 4: BẢO TÀNG SAI LẦM ---
-elif choice == "🏛️ Bảo tàng Sai lầm":
-    st.title("🏛️ The Mistake Museum")
-    st.write("Thương mại hóa sự thất bại. Học từ những lỗi sai kinh điển (Case studies).")
-    
-    st.error("💀 LỖI #404: Nhầm lẫn dấu Vector trong Tích Vô Hướng (Hình học 10)")
-    st.write("Người mắc lỗi: Explorer_Huy (Đã bị trừ tiền Ký quỹ - Escrow)")
-    st.write("Bài học: Phân tích lại hàm `np.dot()` trong Python...")
-    st.button("Mua Blueprint rút kinh nghiệm - 5.000 VNĐ")
+else:
+    # Các trang khác đang xây dựng
+    st.info(f"Bạn đang ở khu vực: **{menu}**. Khu vực này đang được nâng cấp!")
