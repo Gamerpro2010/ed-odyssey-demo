@@ -10,113 +10,89 @@ import time
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
 # ==========================================
-# 2. CSS CAO CẤP (GLASSMORPHISM & DARK MODE V2)
+# 2. CSS CAO CẤP (MONOLITHIC CARDS & NEON UI)
 # ==========================================
 st.markdown("""
     <style>
-    /* Ép nền đen xanh sẫm siêu sang cho toàn bộ app */
-    .stApp {
-        background-color: #0B0F19;
-    }
+    /* Nền tổng thể tối và sang trọng hơn */
+    .stApp { background-color: #0A0F1C; }
+    
+    /* Căn chỉnh lại lề, mở rộng không gian ra 1200px để thẻ không bị ép nhỏ */
+    .block-container { padding-top: 2rem; max-width: 1200px; } 
 
-    /* Thu gọn lề hai bên để form không bị bè ra trên màn hình to */
-    .block-container {
-        padding-top: 2.5rem;
-        max-width: 1050px;
-    }
+    /* Tiêu đề */
+    .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; letter-spacing: -0.5px;}
+    .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
 
-    /* Tiêu đề trang */
-    .main-title {
-        font-size: 2.8rem;
-        font-weight: 900;
-        background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 5px;
-    }
-    .sub-title {
-        color: #94a3b8;
-        font-size: 1.1rem;
-        margin-bottom: 40px;
-    }
-
-    /* THIẾT KẾ THẺ SẢN PHẨM (CARD) ĐỘC LẬP */
+    /* =========================================
+       THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) 
+       ========================================= */
     .cyber-card {
         background: #111827;
         border: 1px solid #1e293b;
-        border-radius: 16px;
+        border-bottom: none; /* Bỏ viền đáy để ghép nối với nút */
+        border-radius: 16px 16px 0 0; /* Chỉ bo tròn 2 góc trên */
         overflow: hidden;
-        height: 360px; /* Chiều cao cố định chuẩn chỉ */
         display: flex;
         flex-direction: column;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-        transition: all 0.3s ease;
+        transition: transform 0.3s ease, border-color 0.3s ease;
     }
-    .cyber-card:hover {
+    
+    /* Hiệu ứng nổi lên khi di chuột vào toàn bộ cột */
+    div[data-testid="column"]:hover .cyber-card {
         border-color: #38bdf8;
-        box-shadow: 0 10px 30px -5px rgba(56, 189, 248, 0.2);
-        transform: translateY(-5px);
+        transform: translateY(-4px);
     }
-
-    /* Khung ảnh tỷ lệ vàng */
-    .img-wrapper {
-        width: 100%;
-        height: 170px;
-        overflow: hidden;
-        border-bottom: 1px solid #1e293b;
-    }
-    .img-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top; /* Trọng tâm ảnh ở phía trên */
-    }
-
-    /* Nội dung text */
-    .card-content {
-        padding: 20px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    .c-title { font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
-    .c-author { font-size: 0.75rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 12px; }
-    .c-desc { font-size: 0.85rem; color: #94a3b8; line-height: 1.5; }
-    .c-price { font-size: 1.5rem; font-weight: 900; color: #f1f5f9; margin-top: auto; }
-
-    /* NÚT BẤM (ĐƯỢC TÁCH RỜI, BO TRÒN XỊN XÒ) */
-    div.stButton > button {
-        background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
-        border: none !important;
-        color: white !important;
-        font-weight: 800 !important;
-        font-size: 1rem !important;
-        border-radius: 12px !important;
-        padding: 15px !important;
-        width: 100% !important;
-        margin-top: 15px !important; /* Tạo khoảng cách với thẻ */
-        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2) !important;
-        transition: all 0.2s !important;
-    }
-    div.stButton > button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4) !important;
+    div[data-testid="column"]:hover div.stButton > button {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px -5px rgba(56, 189, 248, 0.4) !important;
         filter: brightness(1.1);
     }
 
-    /* THẺ ID BÊN SIDEBAR */
-    .founder-pass {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        border-radius: 16px;
-        padding: 25px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        margin-bottom: 25px;
+    /* Vùng chứa ảnh tỷ lệ 16:9 chuẩn mực */
+    .img-wrapper {
+        width: 100%; height: 180px; 
+        border-bottom: 1px solid #1e293b;
+        background-color: #0f172a;
     }
-    .pass-header { font-size: 0.75rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-    .pass-balance { font-size: 2.8rem; font-weight: 900; color: #38bdf8; line-height: 1; }
-    .pass-currency { font-size: 1.1rem; color: #cbd5e1; font-weight: 500; }
-    .pass-user { font-size: 1rem; color: #f8fafc; font-weight: 800; margin-top: 20px; letter-spacing: 1px; }
+    .img-wrapper img {
+        width: 100%; height: 100%; 
+        object-fit: cover; /* Đảm bảo ảnh không bao giờ bị méo */
+        object-position: top; /* Tập trung vào phần trên của ảnh */
+    }
+
+    /* Nội dung văn bản */
+    .card-content {
+        padding: 22px; 
+        display: flex; flex-direction: column;
+    }
+    .c-title { font-size: 1.2rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px; }
+    .c-author { font-size: 0.75rem; color: #0ea5e9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .c-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; height: 65px; overflow: hidden;}
+    .c-price { font-size: 1.4rem; font-weight: 900; color: #fff; margin-top: 15px; }
+
+    /* NÚT BẤM ĐƯỢC "KHÂU" DÍNH VÀO THẺ */
+    div.stButton > button {
+        background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%) !important;
+        border: none !important; color: white !important; 
+        font-weight: 800 !important; font-size: 1.05rem !important;
+        border-radius: 0 0 16px 16px !important; /* Chỉ bo tròn 2 góc dưới */
+        padding: 14px !important; width: 100% !important;
+        margin-top: -15px !important; /* Kéo nút giật lùi lên để dính chặt vào thẻ */
+        transition: all 0.3s ease !important;
+    }
+
+    /* THẺ ID BÊN SIDEBAR - HOLOGRAM EFFECT */
+    .founder-pass {
+        background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,58,138,0.7) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 16px; padding: 22px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6); margin-bottom: 25px;
+    }
+    .pass-header { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .pass-balance { font-size: 2.6rem; font-weight: 900; color: #38bdf8; line-height: 1; text-shadow: 0 0 15px rgba(56,189,248,0.3);}
+    .pass-currency { font-size: 1rem; color: #e2e8f0; font-weight: 500; }
+    .pass-user { font-size: 0.95rem; color: #f8fafc; font-weight: 800; margin-top: 18px; letter-spacing: 1px; }
     .pass-id { font-size: 0.75rem; color: #64748b; font-family: monospace; margin-top: 5px; }
     </style>
 """, unsafe_allow_html=True)
@@ -186,22 +162,20 @@ if menu == "🛒 Blueprint Marketplace":
     st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Thuê mượn và trao đổi các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
     
-    # Sử dụng gap="large" để tạo khoảng thở giữa các thẻ
-    col1, col2, col3 = st.columns(3, gap="large")
+    # Rút khoảng cách gap="large" xuống "medium" để 3 thẻ giãn ra to hơn một chút
+    col1, col2, col3 = st.columns(3, gap="medium")
     
     with col1:
         st.markdown("""
             <div class="cyber-card">
                 <div class="img-wrapper">
-                    <!-- LINK ẢNH CỦA ÔNG ĐÃ ĐƯỢC CHÈN VÀO ĐÂY -->
+                    <!-- Link ảnh gốc của ông -->
                     <img src="https://i.postimg.cc/3xw93DjG/physics.png">
                 </div>
                 <div class="card-content">
-                    <div>
-                        <div class="c-title">Mô Phỏng Vật Lý 10</div>
-                        <div class="c-author">By ED-ODYSSEY</div>
-                        <div class="c-desc">Môi trường giả lập tương tác Vật Lý. Phân tích vector và động học ném xiên.</div>
-                    </div>
+                    <div class="c-title">Mô Phỏng Vật Lý 10</div>
+                    <div class="c-author">By ED-ODYSSEY</div>
+                    <div class="c-desc">Môi trường giả lập tương tác Vật Lý. Phân tích vector và động học ném xiên.</div>
                     <div class="c-price">15 CR</div>
                 </div>
             </div>
@@ -213,15 +187,12 @@ if menu == "🛒 Blueprint Marketplace":
         st.markdown("""
             <div class="cyber-card">
                 <div class="img-wrapper">
-                    <!-- Ảnh dữ liệu mạng cực đẹp (Dark Blue) -->
                     <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80">
                 </div>
                 <div class="card-content">
-                    <div>
-                        <div class="c-title">Đồ Thị Động Học</div>
-                        <div class="c-author">By MathWiz_01</div>
-                        <div class="c-desc">Thuật toán xử lý dữ liệu vận tốc. Tự động tìm cực đại, cực tiểu và vẽ gia tốc.</div>
-                    </div>
+                    <div class="c-title">Đồ Thị Động Học</div>
+                    <div class="c-author">By MathWiz_01</div>
+                    <div class="c-desc">Thuật toán xử lý dữ liệu vận tốc. Tự động tìm cực đại, cực tiểu và vẽ gia tốc.</div>
                     <div class="c-price">10 CR</div>
                 </div>
             </div>
@@ -233,15 +204,12 @@ if menu == "🛒 Blueprint Marketplace":
         st.markdown("""
             <div class="cyber-card">
                 <div class="img-wrapper">
-                    <!-- Ảnh lưới không gian Cyber -->
                     <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80">
                 </div>
                 <div class="card-content">
-                    <div>
-                        <div class="c-title">Xử Lý Tích Vô Hướng</div>
-                        <div class="c-author">By CodeNinja_HN</div>
-                        <div class="c-desc">Engine xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán 10.</div>
-                    </div>
+                    <div class="c-title">Xử Lý Tích Vô Hướng</div>
+                    <div class="c-author">By CodeNinja_HN</div>
+                    <div class="c-desc">Engine xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán 10.</div>
                     <div class="c-price">12 CR</div>
                 </div>
             </div>
