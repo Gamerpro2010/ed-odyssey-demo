@@ -30,8 +30,8 @@ st.markdown("""
     .cyber-card {
         background: #111827;
         border: 1px solid #1e293b;
-        border-bottom: none; /* Bỏ viền đáy để ghép nối với nút */
-        border-radius: 16px 16px 0 0; /* Chỉ bo tròn 2 góc trên */
+        border-bottom: none; 
+        border-radius: 16px 16px 0 0; 
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -57,8 +57,8 @@ st.markdown("""
     }
     .img-wrapper img {
         width: 100%; height: 100%; 
-        object-fit: cover; /* Đảm bảo ảnh không bao giờ bị méo */
-        object-position: top; /* Tập trung vào phần trên của ảnh */
+        object-fit: cover; 
+        object-position: top; 
     }
 
     /* Nội dung văn bản */
@@ -76,9 +76,9 @@ st.markdown("""
         background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%) !important;
         border: none !important; color: white !important; 
         font-weight: 800 !important; font-size: 1.05rem !important;
-        border-radius: 0 0 16px 16px !important; /* Chỉ bo tròn 2 góc dưới */
+        border-radius: 0 0 16px 16px !important; 
         padding: 14px !important; width: 100% !important;
-        margin-top: -15px !important; /* Kéo nút giật lùi lên để dính chặt vào thẻ */
+        margin-top: -15px !important; 
         transition: all 0.3s ease !important;
     }
 
@@ -162,14 +162,12 @@ if menu == "🛒 Blueprint Marketplace":
     st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Thuê mượn và trao đổi các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
     
-    # Rút khoảng cách gap="large" xuống "medium" để 3 thẻ giãn ra to hơn một chút
     col1, col2, col3 = st.columns(3, gap="medium")
     
     with col1:
         st.markdown("""
             <div class="cyber-card">
                 <div class="img-wrapper">
-                    <!-- Link ảnh gốc của ông -->
                     <img src="https://i.postimg.cc/3xw93DjG/physics.png">
                 </div>
                 <div class="card-content">
@@ -221,31 +219,23 @@ elif menu == "💻 My Workspace":
     st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Bàn làm việc kỹ thuật số. Chọn tab bên dưới để khởi chạy công cụ.</div>', unsafe_allow_html=True)
     
-    # Kiểm tra xem ông đã mua món nào ở Marketplace chưa
     if not st.session_state.owned_tools:
         st.info("Bàn làm việc của ông đang trống. Hãy ghé Marketplace để trang bị thêm công cụ!")
     else:
-        # Tự động tạo Tab dựa trên danh sách đồ đã sở hữu
         tabs = st.tabs(st.session_state.owned_tools)
         
         for i, tool in enumerate(st.session_state.owned_tools):
             with tabs[i]:
                 st.write("") 
                 
-                # Khối điều hướng nhúng trang web con
                 if tool == "Mô Phỏng Vật Lý 10":
-                    # Link app vật lý của ông
                     components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Đồ Thị Động Học":
-                    # THAY LINK WEB ĐỒ THỊ CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
-                    # Ví dụ: https://sonhns-kinematics.streamlit.app/?embed=true
                     components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Xử Lý Tích Vô Hướng":
-                    # THAY LINK WEB VECTOR CỦA ÔNG SAU KHI DEPLOY VÀO ĐÂY
-                    # Ví dụ: https://sonhns-vector-engine.streamlit.app/?embed=true
-                    components.iframe("https://ed-odyssey-demo-nybq8qraapra5jutfymrdv.streamlit.app/?embed=true", height=850, scrolling=True)
+                    components.iframe("https://tich-vo-huong-demo.streamlit.app/?embed=true", height=850, scrolling=True)
 
 elif menu == "🎯 Bounty Board":
     st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
