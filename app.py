@@ -12,7 +12,7 @@ import os
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
 # ==========================================
-# 2. CSS CAO CẤP (MONOLITHIC CARDS & NEON UI)
+# 2. CSS CAO CẤP (FOUNDER EDITION UI)
 # ==========================================
 st.markdown("""
     <style>
@@ -21,7 +21,7 @@ st.markdown("""
     .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; letter-spacing: -0.5px;}
     .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
 
-    /* THIẾT KẾ THẺ NGUYÊN KHỐI */
+    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) */
     .cyber-card {
         background: #111827; border: 1px solid #1e293b; border-bottom: none; 
         border-radius: 16px 16px 0 0; overflow: hidden; display: flex; flex-direction: column;
@@ -30,19 +30,19 @@ st.markdown("""
     div[data-testid="column"]:hover .cyber-card { border-color: #38bdf8; transform: translateY(-4px); }
     div[data-testid="column"]:hover div.stButton > button { transform: translateY(-4px); box-shadow: 0 12px 25px -5px rgba(56, 189, 248, 0.4) !important; filter: brightness(1.1); }
 
-    .img-wrapper { width: 100%; height: 180px; border-bottom: 1px solid #1e293b; background-color: #0f172a; }
-    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-    .card-content { padding: 22px; display: flex; flex-direction: column; }
-    .c-title { font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px; }
-    .c-author { font-size: 0.75rem; color: #0ea5e9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 12px; }
-    .c-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; height: 65px; overflow: hidden;}
-    .c-price { font-size: 1.4rem; font-weight: 900; color: #fff; margin-top: 15px; }
+    .img-wrapper { width: 100%; height: 160px; border-bottom: 1px solid #1e293b; background-color: #0f172a; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .card-content { padding: 18px; display: flex; flex-direction: column; }
+    .c-title { font-size: 1.1rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+    .c-author { font-size: 0.7rem; color: #0ea5e9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .c-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; height: 50px; overflow: hidden;}
+    .c-price { font-size: 1.3rem; font-weight: 900; color: #fff; margin-top: 10px; }
 
     /* NÚT BẤM DÍNH VÀO THẺ */
     div.stButton > button {
         background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%) !important;
-        border: none !important; color: white !important; font-weight: 800 !important; font-size: 1.05rem !important;
-        border-radius: 0 0 16px 16px !important; padding: 14px !important; width: 100% !important;
+        border: none !important; color: white !important; font-weight: 800 !important; font-size: 1rem !important;
+        border-radius: 0 0 16px 16px !important; padding: 12px !important; width: 100% !important;
         margin-top: -15px !important; transition: all 0.3s ease !important;
     }
 
@@ -67,21 +67,23 @@ st.markdown("""
 # 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE)
 # ==========================================
 DB_FILE = 'users_db.json'
+DEFAULT_USERS = {'admin': '1234', 'honamson': 'honamson2010'}
 
 def load_db():
-    """Đọc dữ liệu từ file JSON, nếu chưa có thì tạo mới với tài khoản mặc định"""
     if os.path.exists(DB_FILE):
-        with open(DB_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {
-        'admin': '1234', 
-        'honamson': 'honamson2010'
-    }
+        try:
+            with open(DB_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return DEFAULT_USERS
+    return DEFAULT_USERS
 
 def save_db(db_data):
-    """Ghi đè dữ liệu mới vào file JSON"""
-    with open(DB_FILE, 'w', encoding='utf-8') as f:
-        json.dump(db_data, f, ensure_ascii=False, indent=4)
+    try:
+        with open(DB_FILE, 'w', encoding='utf-8') as f:
+            json.dump(db_data, f, ensure_ascii=False, indent=4)
+    except Exception:
+        pass
 
 if 'users_db' not in st.session_state:
     st.session_state.users_db = load_db() 
@@ -98,7 +100,7 @@ if 'show_success' not in st.session_state:
     st.session_state.show_success = None
 
 # ==========================================
-# GIAO DIỆN CHƯA ĐĂNG NHẬP
+# 4. GIAO DIỆN AUTH
 # ==========================================
 if not st.session_state.logged_in:
     st.markdown("<h1 style='text-align: center; font-size: 3rem; font-weight: 900; color: #f8fafc; margin-top: 5vh;'>🚀 ED-ODYSSEY</h1>", unsafe_allow_html=True)
@@ -113,7 +115,6 @@ if not st.session_state.logged_in:
             login_user = st.text_input("Tên đăng nhập")
             login_pass = st.text_input("Mật khẩu", type="password")
             if st.button("Đăng nhập vào hệ thống", use_container_width=True):
-                # Tải lại database mới nhất trước khi check
                 st.session_state.users_db = load_db()
                 if login_user in st.session_state.users_db and st.session_state.users_db[login_user] == login_pass:
                     st.session_state.logged_in = True
@@ -123,29 +124,26 @@ if not st.session_state.logged_in:
                     st.error("Sai tên đăng nhập hoặc mật khẩu!")
                     
         with tab2:
-            new_user = st.text_input("Tạo tên hiển thị (Ví dụ: NguyenVanA)")
+            new_user = st.text_input("Tạo tên hiển thị")
             new_pass = st.text_input("Tạo mật khẩu", type="password")
             if st.button("Tạo tài khoản mới", use_container_width=True):
-                st.session_state.users_db = load_db() # Đọc lại data để check trùng
+                st.session_state.users_db = load_db()
                 if new_user == "" or new_pass == "":
                     st.warning("Vui lòng điền đủ thông tin!")
                 elif new_user in st.session_state.users_db:
-                    st.error("Tên đăng nhập này đã có người sử dụng!")
+                    st.error("Tên đăng nhập đã tồn tại!")
                 else:
-                    # Lưu tài khoản mới vào RAM
                     st.session_state.users_db[new_user] = new_pass
-                    # GHI THẲNG VÀO Ổ CỨNG (FILE JSON)
                     save_db(st.session_state.users_db)
-                    
                     st.session_state.logged_in = True
                     st.session_state.current_user = new_user
-                    st.toast("Đăng ký thành công! Dữ liệu đã được lưu trữ vĩnh viễn...", icon="✅")
+                    st.toast("Đăng ký thành công!", icon="✅")
                     time.sleep(0.5)
                     st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# GIAO DIỆN ĐÃ ĐĂNG NHẬP (TRANG CHÍNH)
+# 5. GIAO DIỆN CHÍNH
 # ==========================================
 else:
     if st.session_state.show_success:
@@ -167,7 +165,6 @@ else:
     with st.sidebar:
         st.markdown("## 🚀 ED-ODYSSEY")
         st.write("---")
-        
         st.markdown(f"""
             <div class="founder-pass">
                 <div class="pass-header">Hệ thống Ody-Credit</div>
@@ -178,106 +175,95 @@ else:
         """, unsafe_allow_html=True)
         
         with st.popover("💳 Nạp Năng Lượng (CR)", use_container_width=True):
-            st.markdown("**Tỷ giá: 1.000 VNĐ = 1 CR**")
-            method = st.selectbox("Phương thức", ["Ví MoMo", "Chuyển khoản"])
             amount = st.number_input("Số CR muốn nạp", min_value=10, step=10, value=20)
-            st.info(f"Thanh toán {amount * 1000:,} VNĐ qua {method}.")
-            if st.checkbox("Xác nhận đã chuyển khoản"):
-                if st.button("Xử lý giao dịch", type="primary", use_container_width=True):
-                    with st.spinner("Đang kết nối ngân hàng..."):
-                        time.sleep(1)
-                        st.session_state.credit_balance += amount
-                        st.rerun()
+            if st.button("Xác nhận nạp", type="primary", use_container_width=True):
+                st.session_state.credit_balance += amount
+                st.rerun()
 
         st.write("---")
-        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Blueprint Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
+        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
         
         st.write("---")
         if st.button("🚪 Đăng xuất", use_container_width=True):
             st.session_state.logged_in = False
-            st.session_state.current_user = ""
-            st.session_state.owned_tools = [] 
             st.rerun()
 
-    if menu == "🛒 Blueprint Marketplace":
+    if menu == "🛒 Marketplace":
         st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-title">Thuê mượn và trao đổi các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns(3, gap="medium")
-        
+        # Hàng 1
+        col1, col2 = st.columns(2, gap="medium")
         with col1:
-            st.markdown("""
-                <div class="cyber-card">
-                    <div class="img-wrapper">
-                        <img src="https://i.postimg.cc/3xw93DjG/physics.png">
-                    </div>
-                    <div class="card-content">
-                        <div class="c-title">Mô Phỏng Vật Lý 10</div>
-                        <div class="c-author">BY ED-ODYSSEY</div>
-                        <div class="c-desc">Môi trường giả lập tương tác Vật Lý. Phân tích vector và động học ném xiên.</div>
-                        <div class="c-price">15 CR</div>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Mua gói vĩnh viễn", key="b1", use_container_width=True):
+            st.markdown("""<div class="cyber-card">
+                <div class="img-wrapper"><img src="https://i.postimg.cc/3xw93DjG/physics.png"></div>
+                <div class="card-content">
+                    <div class="c-title">Mô Phỏng Vật Lý 10</div>
+                    <div class="c-author">BY ED-ODYSSEY</div>
+                    <div class="c-desc">Giả lập tương tác ném xiên và động học chất điểm chuyên sâu.</div>
+                    <div class="c-price">15 CR</div>
+                </div></div>""", unsafe_allow_html=True)
+            if st.button("Mua gói vĩnh viễn", key="buy_phy", use_container_width=True):
                 process_purchase("Mô Phỏng Vật Lý 10", 15)
 
         with col2:
-            st.markdown("""
-                <div class="cyber-card">
-                    <div class="img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80">
-                    </div>
-                    <div class="card-content">
-                        <div class="c-title">Đồ Thị Động Học</div>
-                        <div class="c-author">BY MATHWIZ_01</div>
-                        <div class="c-desc">Thuật toán xử lý dữ liệu vận tốc. Tự động tìm cực đại, cực tiểu và vẽ gia tốc.</div>
-                        <div class="c-price">10 CR</div>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Mua gói vĩnh viễn", key="b2", use_container_width=True):
-                process_purchase("Đồ Thị Động Học", 10)
+            st.markdown("""<div class="cyber-card">
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="card-content">
+                    <div class="c-title">3D Vector & Oxyz Lab</div>
+                    <div class="c-author">BY MATHWIZ_HNS</div>
+                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác thời gian thực.</div>
+                    <div class="c-price">20 CR</div>
+                </div></div>""", unsafe_allow_html=True)
+            if st.button("Mua gói vĩnh viễn", key="buy_3d", use_container_width=True):
+                process_purchase("3D Vector & Oxyz Lab", 20)
 
+        st.write("")
+        # Hàng 2
+        col3, col4 = st.columns(2, gap="medium")
         with col3:
-            st.markdown("""
-                <div class="cyber-card">
-                    <div class="img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80">
-                    </div>
-                    <div class="card-content">
-                        <div class="c-title">Xử Lý Tích Vô Hướng</div>
-                        <div class="c-author">BY CODENINJA_HN</div>
-                        <div class="c-desc">Engine xử lý ma trận và cảnh báo sai sót ký hiệu Vector cho môn Toán 10.</div>
-                        <div class="c-price">12 CR</div>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button("Mua gói vĩnh viễn", key="b3", use_container_width=True):
+            st.markdown("""<div class="cyber-card">
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509228468518-180dd482180c?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="card-content">
+                    <div class="c-title">Xử Lý Tích Vô Hướng</div>
+                    <div class="c-author">BY CODENINJA_HNS</div>
+                    <div class="c-desc">Engine xử lý ma trận và giải nhanh các phép toán vector đại số.</div>
+                    <div class="c-price">12 CR</div>
+                </div></div>""", unsafe_allow_html=True)
+            if st.button("Mua gói vĩnh viễn", key="buy_vec", use_container_width=True):
                 process_purchase("Xử Lý Tích Vô Hướng", 12)
+
+        with col4:
+            st.markdown("""<div class="cyber-card">
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="card-content">
+                    <div class="c-title">Thống Kê Dữ Liệu</div>
+                    <div class="c-author">By DATA_MASTER</div>
+                    <div class="c-desc">Công cụ vẽ biểu đồ và phân tích xác suất thống kê thực hành.</div>
+                    <div class="c-price">10 CR</div>
+                </div></div>""", unsafe_allow_html=True)
+            if st.button("Mua gói vĩnh viễn", key="buy_stat", use_container_width=True):
+                process_purchase("Thống Kê Dữ Liệu", 10)
 
     elif menu == "💻 My Workspace":
         st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="sub-title">Bàn làm việc của {st.session_state.current_user}. Chọn tab bên dưới để khởi chạy công cụ.</div>', unsafe_allow_html=True)
         
         if not st.session_state.owned_tools:
-            st.info("Bàn làm việc của bạn đang trống. Hãy ghé Marketplace để trang bị thêm công cụ!")
+            st.info("Bàn làm việc trống. Hãy mua công cụ từ Marketplace!")
         else:
             tabs = st.tabs(st.session_state.owned_tools)
-            
             for i, tool in enumerate(st.session_state.owned_tools):
                 with tabs[i]:
                     st.write("") 
-                    
                     if tool == "Mô Phỏng Vật Lý 10":
-                        components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=850, scrolling=True)
-                    
-                    elif tool == "Đồ Thị Động Học":
-                        components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?embed=true", height=850, scrolling=True)
-                    
+                        components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=900, scrolling=True)
+                    elif tool == "3D Vector & Oxyz Lab":
+                        components.iframe("https://3d-vector-va-do-thi.streamlit.app/?embed=true", height=1000, scrolling=True)
                     elif tool == "Xử Lý Tích Vô Hướng":
-                        components.iframe("https://tich-vo-huong-demo.streamlit.app/?embed=true", height=1000, scrolling=True)
+                        components.iframe("https://tich-vo-huong.streamlit.app/?embed=true", height=900, scrolling=True)
+                    elif tool == "Thống Kê Dữ Liệu":
+                        components.iframe("https://thong-ke.streamlit.app/?embed=true", height=900, scrolling=True)
 
     elif menu == "🎯 Bounty Board":
         st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
-        st.info("Bảng nhiệm vụ treo thưởng đang được bảo trì.")
+        st.info("Hệ thống nhiệm vụ đang được bảo trì.")
