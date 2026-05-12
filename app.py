@@ -24,9 +24,7 @@ st.markdown("""
     .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; letter-spacing: -0.5px;}
     .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
 
-    /* =========================================
-       THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) 
-       ========================================= */
+    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) */
     .cyber-card {
         background: #111827;
         border: 1px solid #1e293b;
@@ -38,7 +36,6 @@ st.markdown("""
         transition: transform 0.3s ease, border-color 0.3s ease;
     }
     
-    /* Hiệu ứng nổi lên khi di chuột vào toàn bộ cột */
     div[data-testid="column"]:hover .cyber-card {
         border-color: #38bdf8;
         transform: translateY(-4px);
@@ -49,7 +46,6 @@ st.markdown("""
         filter: brightness(1.1);
     }
 
-    /* Vùng chứa ảnh tỷ lệ 16:9 chuẩn mực */
     .img-wrapper {
         width: 100%; height: 180px; 
         border-bottom: 1px solid #1e293b;
@@ -61,7 +57,6 @@ st.markdown("""
         object-position: top; 
     }
 
-    /* Nội dung văn bản */
     .card-content {
         padding: 22px; 
         display: flex; flex-direction: column;
@@ -71,7 +66,7 @@ st.markdown("""
     .c-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; height: 65px; overflow: hidden;}
     .c-price { font-size: 1.4rem; font-weight: 900; color: #fff; margin-top: 15px; }
 
-    /* NÚT BẤM ĐƯỢC "KHÂU" DÍNH VÀO THẺ */
+    /* NÚT BẤM ĐƯỢC KHÂU DÍNH VÀO THẺ */
     div.stButton > button {
         background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%) !important;
         border: none !important; color: white !important; 
@@ -82,7 +77,7 @@ st.markdown("""
         transition: all 0.3s ease !important;
     }
 
-    /* THẺ ID BÊN SIDEBAR - HOLOGRAM EFFECT */
+    /* THẺ ID BÊN SIDEBAR */
     .founder-pass {
         background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,58,138,0.7) 100%);
         border: 1px solid rgba(56, 189, 248, 0.4);
@@ -155,9 +150,8 @@ with st.sidebar:
     menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Blueprint Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
 
 # ==========================================
-# 5. KHU VỰC CHÍNH (MARKETPLACE / WORKSPACE)
+# 5. KHU VỰC CHÍNH
 # ==========================================
-
 if menu == "🛒 Blueprint Marketplace":
     st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Thuê mượn và trao đổi các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
@@ -235,6 +229,7 @@ elif menu == "💻 My Workspace":
                     components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Xử Lý Tích Vô Hướng":
+                    # CHÈN LINK VECTOR ÔNG VỪA GỬI VÀO ĐÂY
                     components.iframe("https://tich-vo-huong-demo.streamlit.app/?embed=true", height=850, scrolling=True)
 
 elif menu == "🎯 Bounty Board":
