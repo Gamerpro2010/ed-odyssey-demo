@@ -7,27 +7,27 @@ import json
 import os
 
 # ==========================================
-# 1. CẤU HÌNH TRANG - ED-ODYSSEY 
+# 1. CẤU HÌNH TRANG - ED-ODYSSEY
 # ==========================================
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
 # ==========================================
-# 2. CSS CAO CẤP (FOUNDER EDITION UI) [cite: 236, 239, 240]
+# 2. CSS CAO CẤP (FOUNDER EDITION UI)
 # ==========================================
 st.markdown("""
     <style>
-    /* Nền đen nhám mã hex #0E1117 chuẩn phong cách Coder [cite: 240] */
+    /* Nền đen nhám mã hex #0E1117 chuẩn phong cách Coder */
     .stApp { background-color: #0E1117; }
     .block-container { padding-top: 2rem; max-width: 1200px; } 
     
-    /* Tiêu đề chính sử dụng dải màu Neon [cite: 240] */
+    /* Tiêu đề chính sử dụng phong cách Hustle Hub */
     .main-title { 
         font-size: 2.6rem; font-weight: 900; color: #f8fafc; 
         margin-bottom: 5px; letter-spacing: -0.5px;
     }
     .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
 
-    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) [cite: 237] */
+    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) */
     .cyber-card {
         background: #111827; border: 1px solid #1e293b; border-bottom: none; 
         border-radius: 16px 16px 0 0; overflow: hidden; display: flex; flex-direction: column;
@@ -52,7 +52,7 @@ st.markdown("""
     .c-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; height: 50px; overflow: hidden;}
     .c-price { font-size: 1.3rem; font-weight: 900; color: #fff; margin-top: 10px; }
 
-    /* NÚT BẤM MÀU NEON DÍNH VÀO THẺ [cite: 240] */
+    /* NÚT BẤM MÀU NEON DÍNH VÀO THẺ */
     div.stButton > button {
         background: linear-gradient(90deg, #0284c7 0%, #00FFFF 100%) !important;
         border: none !important; color: #0E1117 !important; font-weight: 800 !important; font-size: 1rem !important;
@@ -60,7 +60,7 @@ st.markdown("""
         margin-top: -15px !important; transition: all 0.3s ease !important;
     }
 
-    /* THẺ ID BÊN SIDEBAR - HOLOGRAM EFFECT [cite: 236] */
+    /* THẺ ID BÊN SIDEBAR - HOLOGRAM EFFECT */
     .founder-pass {
         background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,58,138,0.7) 100%);
         border: 1px solid rgba(0, 255, 255, 0.4); border-radius: 16px; padding: 22px;
@@ -85,7 +85,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE) [cite: 233]
+# 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE)
 # ==========================================
 DB_FILE = 'users_db.json'
 DEFAULT_USERS = {'admin': '1234', 'honamson': 'honamson2010'}
@@ -121,7 +121,7 @@ if 'show_success' not in st.session_state:
     st.session_state.show_success = None
 
 # ==========================================
-# 4. GIAO DIỆN AUTHENTICATION [cite: 122]
+# 4. GIAO DIỆN AUTHENTICATION
 # ==========================================
 if not st.session_state.logged_in:
     st.markdown("<h1 style='text-align: center; font-size: 3rem; font-weight: 900; color: #f8fafc; margin-top: 5vh;'>🚀 ED-ODYSSEY</h1>", unsafe_allow_html=True)
@@ -164,7 +164,7 @@ if not st.session_state.logged_in:
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 5. GIAO DIỆN NỀN TẢNG CHÍNH [cite: 126]
+# 5. GIAO DIỆN NỀN TẢNG CHÍNH
 # ==========================================
 else:
     if st.session_state.show_success:
@@ -212,17 +212,17 @@ else:
 
     if menu == "🛒 Marketplace":
         st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu[cite: 194].</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
         
-        # HÀNG 1 [cite: 222]
+        # HÀNG 1
         col1, col2 = st.columns(2, gap="medium")
         with col1:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://i.postimg.cc/3xw93DjG/physics.png"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80&w=800"></div>
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">BY ED-ODYSSEY</div>
-                    <div class="c-desc">Giả lập ném xiên và động học chất điểm tương tác thời gian thực[cite: 223, 224].</div>
+                    <div class="c-desc">Giả lập ném xiên và động học chất điểm tương tác thời gian thực[cite: 223].</div>
                     <div class="c-price">15 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_phy", use_container_width=True):
@@ -230,26 +230,26 @@ else:
 
         with col2:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://i.ytimg.com/vi/51vgIfdBlAk/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGEsgZShcMA8=&rs=AOn4CLCqMxVB0a00_OfNKdQlvMOHZnNRug"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509228641021-f883935a4d7b?auto=format&fit=crop&q=80&w=800"></div>
                 <div class="card-content">
                     <div class="c-title">3D Vector & Oxyz Lab</div>
                     <div class="c-author">BY MATHWIZ_HNS</div>
-                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác đa biến.</div>
+                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác đa biến[cite: 210, 211].</div>
                     <div class="c-price">20 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_3d", use_container_width=True):
                 process_purchase("3D Vector & Oxyz Lab", 20)
 
         st.write("")
-        # HÀNG 2 [cite: 222]
+        # HÀNG 2
         col3, col4 = st.columns(2, gap="medium")
         with col3:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=800"></div>
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">BY CODENINJA_HNS</div>
-                    <div class="c-desc">Engine xử lý ma trận và giải nhanh các phép toán vector đại số.</div>
+                    <div class="c-desc">Engine xử lý ma trận và giải nhanh các phép toán vector đại số bằng NumPy[cite: 204, 227].</div>
                     <div class="c-price">12 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_vec", use_container_width=True):
@@ -257,11 +257,11 @@ else:
 
         with col4:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://static.vecteezy.com/system/resources/previews/077/050/554/non_2x/analytics-dashboard-ui-template-with-dark-theme-data-visualization-charts-and-graphs-for-website-or-app.jpg"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"></div>
                 <div class="card-content">
                     <div class="c-title">Thống Kê Dữ Liệu</div>
                     <div class="c-author">By DATA_MASTER</div>
-                    <div class="c-desc">Công cụ vẽ biểu đồ và phân tích xác suất thống kê thực hành.</div>
+                    <div class="c-desc">Công cụ vẽ biểu đồ và phân tích xác suất thống kê thực hành qua Plotly[cite: 208, 226].</div>
                     <div class="c-price">10 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_stat", use_container_width=True):
@@ -269,7 +269,7 @@ else:
 
     elif menu == "💻 My Workspace":
         st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="sub-title">Bàn làm việc của {st.session_state.current_user}[cite: 144, 220].</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="sub-title">Bàn làm việc của {st.session_state.current_user}.</div>', unsafe_allow_html=True)
         
         if not st.session_state.owned_tools:
             st.info("Bàn làm việc trống. Hãy mua công cụ từ Marketplace!")
