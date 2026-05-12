@@ -218,11 +218,11 @@ else:
         col1, col2 = st.columns(2, gap="medium")
         with col1:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80&w=800"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop"></div>
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">BY ED-ODYSSEY</div>
-                    <div class="c-desc">Giả lập ném xiên và động học chất điểm tương tác thời gian thực[cite: 223].</div>
+                    <div class="c-desc">Giả lập tương tác ném xiên và động học chất điểm tương tác thời gian thực.</div>
                     <div class="c-price">15 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_phy", use_container_width=True):
@@ -230,11 +230,11 @@ else:
 
         with col2:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509228641021-f883935a4d7b?auto=format&fit=crop&q=80&w=800"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?q=80&w=800&auto=format&fit=crop"></div>
                 <div class="card-content">
                     <div class="c-title">3D Vector & Oxyz Lab</div>
                     <div class="c-author">BY MATHWIZ_HNS</div>
-                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác đa biến[cite: 210, 211].</div>
+                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác đa biến.</div>
                     <div class="c-price">20 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_3d", use_container_width=True):
@@ -245,11 +245,11 @@ else:
         col3, col4 = st.columns(2, gap="medium")
         with col3:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=800"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509228641021-f883935a4d7b?q=80&w=800&auto=format&fit=crop"></div>
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">BY CODENINJA_HNS</div>
-                    <div class="c-desc">Engine xử lý ma trận và giải nhanh các phép toán vector đại số bằng NumPy[cite: 204, 227].</div>
+                    <div class="c-desc">Engine xử lý ma trận và giải nhanh các phép toán vector đại số bằng NumPy.</div>
                     <div class="c-price">12 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_vec", use_container_width=True):
@@ -257,11 +257,11 @@ else:
 
         with col4:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"></div>
                 <div class="card-content">
                     <div class="c-title">Thống Kê Dữ Liệu</div>
                     <div class="c-author">By DATA_MASTER</div>
-                    <div class="c-desc">Công cụ vẽ biểu đồ và phân tích xác suất thống kê thực hành qua Plotly[cite: 208, 226].</div>
+                    <div class="c-desc">Công cụ vẽ biểu đồ và phân tích xác suất thống kê thực hành qua Plotly.</div>
                     <div class="c-price">10 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_stat", use_container_width=True):
@@ -289,4 +289,4 @@ else:
 
     elif menu == "🎯 Bounty Board":
         st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
-        st.info("Hệ thống nhiệm vụ đang được bảo trì[cite: 242].")
+        st.info("Hệ thống nhiệm vụ đang được bảo trì.")
