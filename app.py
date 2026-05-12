@@ -110,8 +110,15 @@ if not st.session_state.logged_in:
                 elif new_user in st.session_state.users_db:
                     st.error("Tên đăng nhập này đã có người sử dụng!")
                 else:
+                    # Lưu tài khoản mới
                     st.session_state.users_db[new_user] = new_pass
-                    st.success("Đăng ký thành công! Hãy quay lại tab Đăng nhập để vào nền tảng.")
+                    # CẬP NHẬT MỚI: Tự động thiết lập trạng thái đăng nhập
+                    st.session_state.logged_in = True
+                    st.session_state.current_user = new_user
+                    # Bắn thông báo siêu nhỏ và load thẳng vào web
+                    st.toast("Đăng ký thành công! Đang vào hệ thống...", icon="✅")
+                    time.sleep(0.5)
+                    st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
