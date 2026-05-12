@@ -181,14 +181,14 @@ else:
                 st.rerun()
 
         st.write("---")
-        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
+        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Blueprint Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
         
         st.write("---")
         if st.button("🚪 Đăng xuất", use_container_width=True):
             st.session_state.logged_in = False
             st.rerun()
 
-    if menu == "🛒 Marketplace":
+    if menu == "🛒 Blueprint Marketplace":
         st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
         st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
         
@@ -208,7 +208,7 @@ else:
 
         with col2:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="img-wrapper"><img src="https://i.ytimg.com/vi/51vgIfdBlAk/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGEsgZShcMA8=&rs=AOn4CLCqMxVB0a00_OfNKdQlvMOHZnNRug"></div>
                 <div class="card-content">
                     <div class="c-title">3D Vector & Oxyz Lab</div>
                     <div class="c-author">BY MATHWIZ_HNS</div>
@@ -223,7 +223,7 @@ else:
         col3, col4 = st.columns(2, gap="medium")
         with col3:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1509228468518-180dd482180c?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80"></div>
                 <div class="card-content">
                     <div class="c-title">Xử Lý Tích Vô Hướng</div>
                     <div class="c-author">BY CODENINJA_HNS</div>
@@ -235,7 +235,7 @@ else:
 
         with col4:
             st.markdown("""<div class="cyber-card">
-                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"></div>
+                <div class="img-wrapper"><img src="https://static.vecteezy.com/system/resources/previews/077/050/554/non_2x/analytics-dashboard-ui-template-with-dark-theme-data-visualization-charts-and-graphs-for-website-or-app.jpg"></div>
                 <div class="card-content">
                     <div class="c-title">Thống Kê Dữ Liệu</div>
                     <div class="c-author">By DATA_MASTER</div>
