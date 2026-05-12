@@ -3,6 +3,8 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
 import time
+import json
+import os
 
 # ==========================================
 # 1. CẤU HÌNH TRANG
@@ -62,10 +64,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. HỆ THỐNG AUTHENTICATION (ĐĂNG NHẬP/ĐĂNG KÝ)
+# 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE)
 # ==========================================
+DB_FILE = 'users_db.json'
+
+def load_db():
+    """Đọc dữ liệu từ file JSON, nếu chưa có thì tạo mới với tài khoản mặc định"""
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {
+        'admin': '1234', 
+        'honamson': 'honamson2010'
+    }
+
+def save_db(db_data):
+    """Ghi đè dữ liệu mới vào file JSON"""
+    with open(DB_FILE, 'w', encoding='utf-8') as f:
+        json.dump(db_data, f, ensure_ascii=False, indent=4)
+
 if 'users_db' not in st.session_state:
-    st.session_state.users_db = {'admin': '1234'} 
+    st.session_state.users_db = load_db() 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'current_user' not in st.session_state:
@@ -94,6 +113,8 @@ if not st.session_state.logged_in:
             login_user = st.text_input("Tên đăng nhập")
             login_pass = st.text_input("Mật khẩu", type="password")
             if st.button("Đăng nhập vào hệ thống", use_container_width=True):
+                # Tải lại database mới nhất trước khi check
+                st.session_state.users_db = load_db()
                 if login_user in st.session_state.users_db and st.session_state.users_db[login_user] == login_pass:
                     st.session_state.logged_in = True
                     st.session_state.current_user = login_user
@@ -105,18 +126,20 @@ if not st.session_state.logged_in:
             new_user = st.text_input("Tạo tên hiển thị (Ví dụ: NguyenVanA)")
             new_pass = st.text_input("Tạo mật khẩu", type="password")
             if st.button("Tạo tài khoản mới", use_container_width=True):
+                st.session_state.users_db = load_db() # Đọc lại data để check trùng
                 if new_user == "" or new_pass == "":
                     st.warning("Vui lòng điền đủ thông tin!")
                 elif new_user in st.session_state.users_db:
                     st.error("Tên đăng nhập này đã có người sử dụng!")
                 else:
-                    # Lưu tài khoản mới
+                    # Lưu tài khoản mới vào RAM
                     st.session_state.users_db[new_user] = new_pass
-                    # CẬP NHẬT MỚI: Tự động thiết lập trạng thái đăng nhập
+                    # GHI THẲNG VÀO Ổ CỨNG (FILE JSON)
+                    save_db(st.session_state.users_db)
+                    
                     st.session_state.logged_in = True
                     st.session_state.current_user = new_user
-                    # Bắn thông báo siêu nhỏ và load thẳng vào web
-                    st.toast("Đăng ký thành công! Đang vào hệ thống...", icon="✅")
+                    st.toast("Đăng ký thành công! Dữ liệu đã được lưu trữ vĩnh viễn...", icon="✅")
                     time.sleep(0.5)
                     st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
