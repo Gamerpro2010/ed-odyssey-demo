@@ -7,64 +7,85 @@ import json
 import os
 
 # ==========================================
-# 1. CẤU HÌNH TRANG
+# 1. CẤU HÌNH TRANG - ED-ODYSSEY 
 # ==========================================
 st.set_page_config(page_title="ED-ODYSSEY", page_icon="🚀", layout="wide")
 
 # ==========================================
-# 2. CSS CAO CẤP (FOUNDER EDITION UI)
+# 2. CSS CAO CẤP (FOUNDER EDITION UI) [cite: 236, 239, 240]
 # ==========================================
 st.markdown("""
     <style>
-    .stApp { background-color: #0A0F1C; }
+    /* Nền đen nhám mã hex #0E1117 chuẩn phong cách Coder [cite: 240] */
+    .stApp { background-color: #0E1117; }
     .block-container { padding-top: 2rem; max-width: 1200px; } 
-    .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; letter-spacing: -0.5px;}
+    
+    /* Tiêu đề chính sử dụng dải màu Neon [cite: 240] */
+    .main-title { 
+        font-size: 2.6rem; font-weight: 900; color: #f8fafc; 
+        margin-bottom: 5px; letter-spacing: -0.5px;
+    }
     .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
 
-    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) */
+    /* THIẾT KẾ THẺ NGUYÊN KHỐI (MONOLITHIC CARD) [cite: 237] */
     .cyber-card {
         background: #111827; border: 1px solid #1e293b; border-bottom: none; 
         border-radius: 16px 16px 0 0; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 0.3s ease, border-color 0.3s ease;
     }
-    div[data-testid="column"]:hover .cyber-card { border-color: #38bdf8; transform: translateY(-4px); }
-    div[data-testid="column"]:hover div.stButton > button { transform: translateY(-4px); box-shadow: 0 12px 25px -5px rgba(56, 189, 248, 0.4) !important; filter: brightness(1.1); }
+    div[data-testid="column"]:hover .cyber-card { border-color: #00FFFF; transform: translateY(-4px); }
+    div[data-testid="column"]:hover div.stButton > button { 
+        transform: translateY(-4px); 
+        box-shadow: 0 12px 25px -5px rgba(0, 255, 255, 0.4) !important; 
+        filter: brightness(1.1); 
+    }
 
     .img-wrapper { width: 100%; height: 160px; border-bottom: 1px solid #1e293b; background-color: #0f172a; }
     .img-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    
     .card-content { padding: 18px; display: flex; flex-direction: column; }
-    .c-title { font-size: 1.1rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
-    .c-author { font-size: 0.7rem; color: #0ea5e9; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .c-title { font-size: 1.15rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+    .c-author { 
+        font-size: 0.7rem; color: #0ea5e9; text-transform: uppercase; 
+        font-weight: 800; letter-spacing: 0.5px; margin-bottom: 10px; 
+    }
     .c-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; height: 50px; overflow: hidden;}
     .c-price { font-size: 1.3rem; font-weight: 900; color: #fff; margin-top: 10px; }
 
-    /* NÚT BẤM DÍNH VÀO THẺ */
+    /* NÚT BẤM MÀU NEON DÍNH VÀO THẺ [cite: 240] */
     div.stButton > button {
-        background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%) !important;
-        border: none !important; color: white !important; font-weight: 800 !important; font-size: 1rem !important;
+        background: linear-gradient(90deg, #0284c7 0%, #00FFFF 100%) !important;
+        border: none !important; color: #0E1117 !important; font-weight: 800 !important; font-size: 1rem !important;
         border-radius: 0 0 16px 16px !important; padding: 12px !important; width: 100% !important;
         margin-top: -15px !important; transition: all 0.3s ease !important;
     }
 
-    /* THẺ ID BÊN SIDEBAR */
+    /* THẺ ID BÊN SIDEBAR - HOLOGRAM EFFECT [cite: 236] */
     .founder-pass {
         background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,58,138,0.7) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 16px; padding: 22px;
+        border: 1px solid rgba(0, 255, 255, 0.4); border-radius: 16px; padding: 22px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.6); margin-bottom: 25px;
     }
     .pass-header { font-size: 0.7rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-    .pass-balance { font-size: 2.6rem; font-weight: 900; color: #38bdf8; line-height: 1; text-shadow: 0 0 15px rgba(56,189,248,0.3);}
+    .pass-balance { 
+        font-size: 2.6rem; font-weight: 900; color: #00FFFF; 
+        line-height: 1; text-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
     .pass-currency { font-size: 1rem; color: #e2e8f0; font-weight: 500; }
     .pass-user { font-size: 0.95rem; color: #f8fafc; font-weight: 800; margin-top: 18px; letter-spacing: 1px; text-transform: uppercase; }
     .pass-id { font-size: 0.75rem; color: #64748b; font-family: monospace; margin-top: 5px; }
     
     /* Box Login */
-    .login-box { background: #111827; padding: 40px; border-radius: 16px; border: 1px solid #1e293b; max-width: 500px; margin: 0 auto; margin-top: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .login-box { 
+        background: #111827; padding: 40px; border-radius: 16px; 
+        border: 1px solid #1e293b; max-width: 500px; margin: 0 auto; 
+        margin-top: 50px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); 
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE)
+# 3. HỆ THỐNG CƠ SỞ DỮ LIỆU (JSON DATABASE) [cite: 233]
 # ==========================================
 DB_FILE = 'users_db.json'
 DEFAULT_USERS = {'admin': '1234', 'honamson': 'honamson2010'}
@@ -100,11 +121,11 @@ if 'show_success' not in st.session_state:
     st.session_state.show_success = None
 
 # ==========================================
-# 4. GIAO DIỆN AUTH
+# 4. GIAO DIỆN AUTHENTICATION [cite: 122]
 # ==========================================
 if not st.session_state.logged_in:
     st.markdown("<h1 style='text-align: center; font-size: 3rem; font-weight: 900; color: #f8fafc; margin-top: 5vh;'>🚀 ED-ODYSSEY</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #94a3b8;'>Hệ sinh thái học thuật ngang hàng</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #94a3b8;'>Hành trình tri thức kiến tạo từ sự sẻ chia</p>", unsafe_allow_html=True)
     
     col_a, col_main, col_b = st.columns([1, 2, 1])
     with col_main:
@@ -124,14 +145,14 @@ if not st.session_state.logged_in:
                     st.error("Sai tên đăng nhập hoặc mật khẩu!")
                     
         with tab2:
-            new_user = st.text_input("Tạo tên hiển thị")
+            new_user = st.text_input("Tạo tên hiển thị (Ví dụ: NguyenVanA)")
             new_pass = st.text_input("Tạo mật khẩu", type="password")
             if st.button("Tạo tài khoản mới", use_container_width=True):
                 st.session_state.users_db = load_db()
                 if new_user == "" or new_pass == "":
                     st.warning("Vui lòng điền đủ thông tin!")
                 elif new_user in st.session_state.users_db:
-                    st.error("Tên đăng nhập đã tồn tại!")
+                    st.error("Tên đăng nhập này đã tồn tại!")
                 else:
                     st.session_state.users_db[new_user] = new_pass
                     save_db(st.session_state.users_db)
@@ -143,7 +164,7 @@ if not st.session_state.logged_in:
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 5. GIAO DIỆN CHÍNH
+# 5. GIAO DIỆN NỀN TẢNG CHÍNH [cite: 126]
 # ==========================================
 else:
     if st.session_state.show_success:
@@ -165,6 +186,7 @@ else:
     with st.sidebar:
         st.markdown("## 🚀 ED-ODYSSEY")
         st.write("---")
+        
         st.markdown(f"""
             <div class="founder-pass">
                 <div class="pass-header">Hệ thống Ody-Credit</div>
@@ -181,18 +203,18 @@ else:
                 st.rerun()
 
         st.write("---")
-        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Blueprint Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
+        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Marketplace", "💻 My Workspace", "🎯 Bounty Board"], label_visibility="collapsed")
         
         st.write("---")
         if st.button("🚪 Đăng xuất", use_container_width=True):
             st.session_state.logged_in = False
             st.rerun()
 
-    if menu == "🛒 Blueprint Marketplace":
+    if menu == "🛒 Marketplace":
         st.markdown('<div class="main-title">Blueprint Marketplace</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sub-title">Trang bị các mô-đun công nghệ giáo dục chuyên sâu[cite: 194].</div>', unsafe_allow_html=True)
         
-        # Hàng 1
+        # HÀNG 1 [cite: 222]
         col1, col2 = st.columns(2, gap="medium")
         with col1:
             st.markdown("""<div class="cyber-card">
@@ -200,7 +222,7 @@ else:
                 <div class="card-content">
                     <div class="c-title">Mô Phỏng Vật Lý 10</div>
                     <div class="c-author">BY ED-ODYSSEY</div>
-                    <div class="c-desc">Giả lập tương tác ném xiên và động học chất điểm chuyên sâu.</div>
+                    <div class="c-desc">Giả lập ném xiên và động học chất điểm tương tác thời gian thực[cite: 223, 224].</div>
                     <div class="c-price">15 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_phy", use_container_width=True):
@@ -212,14 +234,14 @@ else:
                 <div class="card-content">
                     <div class="c-title">3D Vector & Oxyz Lab</div>
                     <div class="c-author">BY MATHWIZ_HNS</div>
-                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác thời gian thực.</div>
+                    <div class="c-desc">Phòng thí nghiệm hình học không gian 3D tương tác đa biến.</div>
                     <div class="c-price">20 CR</div>
                 </div></div>""", unsafe_allow_html=True)
             if st.button("Mua gói vĩnh viễn", key="buy_3d", use_container_width=True):
                 process_purchase("3D Vector & Oxyz Lab", 20)
 
         st.write("")
-        # Hàng 2
+        # HÀNG 2 [cite: 222]
         col3, col4 = st.columns(2, gap="medium")
         with col3:
             st.markdown("""<div class="cyber-card">
@@ -247,6 +269,7 @@ else:
 
     elif menu == "💻 My Workspace":
         st.markdown('<div class="main-title">My Workspace</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="sub-title">Bàn làm việc của {st.session_state.current_user}[cite: 144, 220].</div>', unsafe_allow_html=True)
         
         if not st.session_state.owned_tools:
             st.info("Bàn làm việc trống. Hãy mua công cụ từ Marketplace!")
@@ -266,4 +289,4 @@ else:
 
     elif menu == "🎯 Bounty Board":
         st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
-        st.info("Hệ thống nhiệm vụ đang được bảo trì.")
+        st.info("Hệ thống nhiệm vụ đang được bảo trì[cite: 242].")
