@@ -229,14 +229,14 @@ elif menu == "💻 My Workspace":
                 st.write("") 
                 
                 if tool == "Mô Phỏng Vật Lý 10":
-                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?fbclid=IwY2xjawRwDJpleHRuA2FlbQIxMABicmlkETFLbmlRY1dQVTF0Ymx1OEIwc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHs8x2S9BGs0hVhmH0gIKCCRsm8mIoIAma55PQgPX9chBIv1V8-2ZrjZXl67z_aem_9k_KEBRyW3XUeOoqxLbKGw/?embed=true", height=850, scrolling=True)
+                    components.iframe("https://mo-phong-vat-ly-10.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Đồ Thị Động Học":
                     components.iframe("https://ed-odyssey-demo-bfihgygwpbrgtfz4tcrt6e.streamlit.app/?embed=true", height=850, scrolling=True)
                 
                 elif tool == "Xử Lý Tích Vô Hướng":
                     # ĐÂY LÀ CHỖ CHÈN LINK APP 3D VECTOR MỚI CỦA ÔNG (Đã xóa fbclid và thêm embed=true)
-                    components.iframe("https://tich-vo-huong-demo.streamlit.app/?fbclid=IwY2xjawRwAMlleHRuA2FlbQIxMABicmlkETFLbmlRY1dQVTF0Ymx1OEIwc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHu9uUJ12J0LNdoTjiZUwNQu54pF8jOA8D_3ute8ZPSWh-1vXjCUD4hQ4m7ZS_aem__t8y8GIdDRBQwBVd9QpLVw/?embed=true", height=1000, scrolling=True)
+                    components.iframe("https://tich-vo-huong-demo.streamlit.app//?embed=true", height=1000, scrolling=True)
 
 elif menu == "🎯 Bounty Board":
     st.markdown('<div class="main-title">Bounty Board</div>', unsafe_allow_html=True)
