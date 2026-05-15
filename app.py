@@ -18,48 +18,60 @@ st.markdown("""
     <style>
     .stApp { background-color: #0E1117; }
     .block-container { padding-top: 2rem; max-width: 1200px; } 
-    .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; }
-    .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; }
-    .login-box {
-        background: #1e293b;
-        padding: 40px;
-        border-radius: 20px;
-        border: 1px solid #334155;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    .main-title { font-size: 2.6rem; font-weight: 900; color: #f8fafc; margin-bottom: 5px; letter-spacing: -0.5px; }
+    .sub-title { color: #94a3b8; font-size: 1.1rem; margin-bottom: 35px; font-weight: 400;}
+    .cyber-card {
+        background: #111827; border: 1px solid #1e293b; border-bottom: none; 
+        border-radius: 16px 16px 0 0; overflow: hidden; display: flex; flex-direction: column;
+        transition: transform 0.3s ease, border-color 0.3s ease;
     }
-    .stButton>button {
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s;
+    div[data-testid="column"]:hover .cyber-card { border-color: #00FFFF; transform: translateY(-4px); }
+    .img-wrapper { width: 100%; height: 160px; border-bottom: 1px solid #1e293b; background-color: #0f172a; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    .card-content { padding: 18px; }
+    .c-title { font-size: 1.15rem; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+    .c-author { font-size: 0.7rem; color: #0ea5e9; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
+    .c-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; height: 50px; overflow: hidden;}
+    .c-price { font-size: 1.3rem; font-weight: 900; color: #fff; margin-top: 10px; }
+    div.stButton > button {
+        background: linear-gradient(90deg, #0284c7 0%, #00FFFF 100%) !important;
+        border: none !important; color: #0E1117 !important; font-weight: 800 !important;
+        border-radius: 0 0 16px 16px !important; padding: 12px !important; width: 100% !important;
+        margin-top: -15px !important; transition: all 0.3s ease !important;
     }
+    .founder-pass {
+        background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,58,138,0.7) 100%);
+        border: 1px solid rgba(0, 255, 255, 0.4); border-radius: 16px; padding: 22px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6); margin-bottom: 25px;
+    }
+    .pass-balance { font-size: 2.6rem; font-weight: 900; color: #00FFFF; text-shadow: 0 0 15px rgba(0, 255, 255, 0.3); }
+    .login-box { background: #111827; padding: 40px; border-radius: 16px; border: 1px solid #1e293b; max-width: 500px; margin: 0 auto; margin-top: 50px; }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. QUẢN LÝ DỮ LIỆU NGƯỜI DÙNG
+# 3. HỆ THỐNG DỮ LIỆU NGƯỜI DÙNG
 # ==========================================
-DB_FILE = "users_db.json"
-DEFAULT_USERS = {"admin": "1234", "guest": "guest123", "honamson": "honamson2010"}
+DB_FILE = 'users_db.json'
+DEFAULT_USERS = {'admin': '1234', 'honamson': 'honamson2010'}
 
 def load_db():
     if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r") as f:
-            return json.load(f)
+        try:
+            with open(DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+        except: return DEFAULT_USERS
     return DEFAULT_USERS
 
-def save_db(db):
-    with open(DB_FILE, "w") as f:
-        json.dump(db, f)
+def save_db(db_data):
+    with open(DB_FILE, 'w', encoding='utf-8') as f: json.dump(db_data, f, ensure_ascii=False, indent=4)
 
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-if 'current_user' not in st.session_state:
-    st.session_state.current_user = None
-if 'owned_tools' not in st.session_state:
-    st.session_state.owned_tools = []
+if 'logged_in' not in st.session_state: st.session_state.logged_in = False
+if 'current_user' not in st.session_state: st.session_state.current_user = ""
+if 'credit_balance' not in st.session_state: st.session_state.credit_balance = 50 
+if 'owned_tools' not in st.session_state: st.session_state.owned_tools = []
 
 # ==========================================
-# 4. GIAO DIỆN AUTHENTICATION (ĐÃ CẬP NHẬT)
+# 4. GIAO DIỆN AUTHENTICATION (CÓ QUÊN MẬT KHẨU)
 # ==========================================
 if not st.session_state.logged_in:
     st.markdown("<h1 style='text-align: center; font-size: 3rem; font-weight: 900; color: #f8fafc; margin-top: 5vh;'>🚀 ED-ODYSSEY</h1>", unsafe_allow_html=True)
@@ -71,60 +83,62 @@ if not st.session_state.logged_in:
         tab1, tab2 = st.tabs(["🔑 Đăng nhập", "📝 Đăng ký"])
         
         with tab1:
-            login_user = st.text_input("Tên đăng nhập", placeholder="Nhập username...", key="li_u")
-            login_pass = st.text_input("Mật khẩu", type="password", placeholder="Nhập password...", key="li_p")
-            
-            # Layout cho nút bấm
-            c1, c2 = st.columns([1, 1])
+            l_user = st.text_input("Tên đăng nhập", key="login_u")
+            l_pass = st.text_input("Mật khẩu", type="password", key="login_p")
+            c1, c2 = st.columns(2)
             with c1:
                 if st.button("Đăng nhập", use_container_width=True, type="primary"):
                     db = load_db()
-                    if login_user in db and db[login_user] == login_pass:
+                    if l_user in db and db[l_user] == l_pass:
                         st.session_state.logged_in = True
-                        st.session_state.current_user = login_user
+                        st.session_state.current_user = l_user
                         st.rerun()
-                    else:
-                        st.error("Thông tin không chính xác!")
-            
+                    else: st.error("Sai thông tin!")
             with c2:
-                # TÍNH NĂNG MỚI NÈ: QUÊN MẬT KHẨU
-                with st.popover("❓ Quên thông tin?", use_container_width=True):
-                    st.write("### Khôi phục tài khoản")
-                    issue = st.radio("Bạn quên gì?", ["Mật khẩu", "Tên đăng nhập"])
-                    info_input = st.text_input("Nhập Tên tài khoản hoặc Email:")
-                    if st.button("Gửi yêu cầu", use_container_width=True):
-                        if info_input:
-                            st.success(f"Yêu cầu xử lý '{info_input}' đã được gửi tới Admin!")
-                            st.toast("Hãy check Discord/Zalo của Admin nhé!", icon="📩")
-                        else:
-                            st.warning("Nhập thông tin đã chứ!")
-
+                with st.popover("❓ Quên mật khẩu?", use_container_width=True):
+                    st.write("### Hỗ trợ khôi phục")
+                    target = st.text_input("Nhập username/email:")
+                    if st.button("Gửi yêu cầu"):
+                        st.toast(f"Đã gửi yêu cầu cho {target}!", icon="📩")
+        
         with tab2:
-            new_user = st.text_input("Tạo username", key="reg_u")
-            new_pass = st.text_input("Tạo mật khẩu", type="password", key="reg_p")
+            n_user = st.text_input("Tên hiển thị", key="reg_u")
+            n_pass = st.text_input("Mật khẩu", type="password", key="reg_p")
             if st.button("Tạo tài khoản", use_container_width=True):
                 db = load_db()
-                if new_user in db:
-                    st.error("Tên này có người lấy rồi!")
-                elif new_user and new_pass:
-                    db[new_user] = new_pass
+                if n_user in db: st.error("Đã tồn tại!")
+                elif n_user and n_pass:
+                    db[n_user] = n_pass
                     save_db(db)
-                    st.success("Đăng ký xong! Qua tab Đăng nhập thôi.")
-                else:
-                    st.warning("Điền đủ thông tin đi bạn ơi!")
+                    st.success("Đăng ký thành công! Hãy qua tab Đăng nhập.")
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# 5. GIAO DIỆN CHÍNH (KHI ĐÃ LOGGED IN)
+# 5. GIAO DIỆN NỀN TẢNG CHÍNH (FULL)
 # ==========================================
 else:
-    # Sidebar và các tính năng khác giữ nguyên như cũ
+    def process_purchase(name, price):
+        if name in st.session_state.owned_tools: st.toast(f"Đã sở hữu {name}!")
+        elif st.session_state.credit_balance >= price:
+            st.session_state.credit_balance -= price
+            st.session_state.owned_tools.append(name)
+            st.balloons()
+            st.rerun()
+        else: st.error("Không đủ Credit!")
+
     with st.sidebar:
-        st.markdown(f"### Chào, {st.session_state.current_user}!")
-        if st.button("Đăng xuất"):
-            st.session_state.logged_in = False
+        st.markdown("## 🚀 ED-ODYSSEY")
+        st.markdown(f"""<div class="founder-pass">
+            <div style="font-size:0.7rem; color:#94a3b8;">Hệ thống Ody-Credit</div>
+            <div class="pass-balance">{st.session_state.credit_balance} <span style="font-size:1rem; color:#fff;">CR</span></div>
+            <div style="font-size:0.9rem; font-weight:800; color:#f8fafc; margin-top:15px;">{st.session_state.current_user.upper()}</div>
+        </div>""", unsafe_allow_html=True)
+        
+        if st.button("💳 Nạp Credit (100 CR)", use_container_width=True):
+            st.session_state.credit_balance += 100
             st.rerun()
             
-    st.markdown('<div class="main-title">Bảng điều khiển</div>', unsafe_allow_html=True)
-    st.write("Chào mừng bạn quay trở lại với ED-ODYSSEY!")
-    # ... (Các phần code Marketplace và Workspace của bạn tiếp tục ở đây)
+        st.write("---")
+        menu = st.radio("ĐIỀU HƯỚNG", ["🛒 Marketplace", "💻 My Workspace", "🎯 Bounty Board"])
+        if st.button("🚪 Đăng xuất", use_container_width=True):
+            st.session_state.logged_in = False
