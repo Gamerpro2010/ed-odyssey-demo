@@ -1,0 +1,12 @@
+name: Keep ED-ODYSSEY Alive
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake up the app
+        run: curl -s https://l.messenger.com/l.php?u=https%3A%2F%2Fed-odyssey.streamlit.app%2F&h=AUCOeYwcbVW_p8h2OidEnFpGDK1Ln-Vgt1dAO7xWtr12JdZtaNIHtBdHq2aeM5AZmSpbkQHbe50kgvHcQjzc-cx0foP3Wve6IDKXwombGur0XQwa5I8oyBJuhlU8k_E > /dev/null
